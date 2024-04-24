@@ -1,0 +1,56 @@
+wod5e:
+  
+  attributes:
+  - Physical:
+    - 
+      name: Strength
+    -
+      name: Dexterity
+    -
+      name: Stamina
+    -
+  - Social:
+    -
+      name: Charisma
+    -
+      name: Manipulation
+    -
+      name: Composure
+  - Mental:
+    -
+      name: Intelligence
+    -
+      name: Wits
+    -
+      name: Resolve
+  
+  skills:
+  - Physical:
+    -
+      name: Athletics
+      specialties:
+      - Acrobatics
+      - Archery
+      - Climbing
+      - Endurance
+      - Jumping
+      - Parkour
+      - Swimming
+      - Throwing
+    -
+      name: Brawl
+      specialties:
+      - Animals
+      - Armed Humans
+      - Bar Fights
+      - Grappling
+      - Unarmed Humans
+    -
+      name: Crafts
+      specialties:
+      - Carpentry
+      - Design
+      - Painting
+      - Sculpting
+      - Sewing
+      - Weaponsmithing

@@ -46,3 +46,5 @@ killares
 # Game directory
 # -----------------------------
 /game/
+
+.devcontainer
