@@ -8,7 +8,6 @@ wod5e:
       name: Dexterity
     -
       name: Stamina
-    -
   - Social:
     -
       name: Charisma
@@ -46,7 +45,7 @@ wod5e:
       - Grappling
       - Unarmed Humans
     -
-      name: Crafts
+      name: Craft
       specialties:
       - Carpentry
       - Design
@@ -54,3 +53,242 @@ wod5e:
       - Sculpting
       - Sewing
       - Weaponsmithing
+    -
+      name: Driving
+      specialties:
+      - All-Terrain Vehicles
+      - Evasion
+      - Motorcycles
+      - Street Racing
+      - Stunts
+      - Tailing
+      - Trucks
+      - Vintage Models
+    -
+      name: Firearms
+      specialties:
+      - Crossbows
+      - Gun Dealing
+      - Gunsmithing
+      - Handloading Ammunition
+      - Quick-DRaw
+      - Sniper
+      - Trick Shooting
+    -
+      name: Larceny
+      specialties:
+      - Alarms
+      - Forgery
+      - Grant Theft Auto
+      - Housebreaking
+      - Lockpicking
+      - Pickpocket
+      - Safecracking
+      - Security Analysis
+    -
+      name: Melee
+      specialties:
+      - Axes
+      - Chains
+      - Clubs
+      - Fencing
+      - Disarming Blows
+      - Garrotes
+      - Improvised Weapons
+      - Knives
+      - Stakes
+      - Swords
+    -
+      name: Stealth
+      specialties:
+      - Ambushes
+      - Crowds
+      - Disguise
+      - Hiding
+      - Shadowing
+      - Silent Movement
+      - Urban
+      - Wilderness
+    -
+      name: Survival
+      specialties:
+      - Desert
+      - Hunting
+      - Jungle
+      - Tracking
+      - Traps
+      - Shelters
+      - Urban Exploration
+      - Woodlands
+  - Social:
+    -
+      name: Animal Ken
+      specialties:
+      - Attack Training
+      - Cats
+      - Dogs
+      - Falconry
+      - Horses
+      - Pacification
+      - Rats
+      - Snakes
+      - Stunt Training
+    -
+      name: Etiquette
+      specialties:
+      - Celebrities
+      - Corporate
+      - Downtown
+      - Org Protocol
+      - One-Percenter
+      - Secret Society
+    -
+      name: Insight
+      specialties:
+      - Ambitions
+      - Desires
+      - Discerning Lies
+      - Emotions
+      - Empathy
+      - Interrogation
+      - Motives
+      - Phobies
+      - Vices
+    -
+      name: Intimidation
+      specialties:
+      - Extortion
+      - Insults
+      - Interrogation
+      - Physical Coercion
+      - Staredowns
+      - Veiled Threats
+      - Wordless
+    -
+      name: Leadership
+      specialties:
+      - Command
+      - Down But Not Out
+      - Guerilla Rally
+      - Inspiration
+      - Oratory
+      - Team Dynamics
+    -
+      name: Performance
+      specialties:
+      - Comedy
+      - Dance
+      - Drama
+      - Drums
+      - Guitar
+      - Keyboards
+      - Poetry
+      - Public Speaking
+      - Rap
+      - Singing
+      - Violin
+      - Wind Instruments
+    -
+      name: Persuasion
+      specialties:
+      - Bargaining
+    -
+      name: Streetwise
+      specialties:
+      - Arms Dealing
+    -
+      name: Subterfuge
+      specialties:
+      - Bluff
+  - Mental:
+    -
+      name: Academics
+      specialties:
+      - African Literature
+    -
+      name: Awareness
+      specialties: 
+      - Ambushes
+    -
+      name: Finance
+      specialties:
+      - Appraisal
+    -
+      name: Investigation
+      specialties:
+      - Criminology
+    -
+      name: Medicine
+      specialties:
+      - First Aid
+    -
+      name: Occult
+      specialties:
+      - Alchemy
+    -
+      name: Politics
+      specialties:
+      - City Government
+    -
+      name: Science
+      specialties:
+      - Astronomy
+    -
+      name: Technology
+      specialties:
+      - Artillery
+
+  chargen_values:
+    attributes:
+    -
+      value: 4
+      amount: 1
+    -
+      value: 3
+      amount: 3
+    -
+      value: 2
+      amount: 4
+    -
+      value: 1
+      amount: 1
+    skills:
+    -
+      name: Jack of all Trades
+      starting_points:
+      - 
+        value: 3
+        amount: 1
+      -
+        value: 2
+        amount: 8
+      -
+        value: 1
+        amount: 10
+    -
+      name: Balanced
+      starting_points:
+      -
+        value: 3
+        amount: 3
+      - 
+        value: 2
+        amount: 5
+      -
+        value: 1
+        amount: 7
+    -
+      name: Specialist
+      starting_points:
+      -
+        value: 4
+        amount: 1
+      -
+        value: 3
+        amount: 3
+      -
+        value: 2
+        amount: 3
+      -
+        value: 1
+        amount: 3

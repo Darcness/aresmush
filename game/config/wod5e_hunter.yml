@@ -1,0 +1,99 @@
+wod5e:
+  hunter:
+    starting_points:
+      advantages: 7
+      flaws: 2
+      edges:
+      - 
+        name: Two Edges
+        requirements:
+        -
+          type: Edge
+          amount: 2
+      - 
+        name: One Edge and Two Perks
+        requirements:
+        -
+          type: Edge
+          amount: 1
+        -
+          type: Perk
+          amount: 2
+    
+    advantages:
+    -
+      name: Linguistics
+      multiple: true
+      levels:
+      - 
+        name: Language
+        value: 1
+      flaws:
+      -
+        name: Illiterate
+        value: 2
+    -
+      name: Looks
+      multiple: false
+      levels:
+      -
+        name: Beautiful
+        value: 2
+      -
+        name: Stunning
+        value: 4
+      flaws:
+      -
+        name: Ugly
+        value: 1
+      -
+        name: Repulsive
+        value: 2
+    -
+      name: Nutritionist
+      multiple: false
+      levels:
+      -
+        name: Solo Cooking
+        value: 1
+      -
+        name: Cell Chef
+        value: 2
+      flaws:
+    -
+      name: Psychological Traits
+      multiple: true
+      levels:
+      flaws:
+      -
+        name: Living on the Edge
+        value: 2
+      -
+        name: Weak-Willed
+        value: 2
+    -
+      name: Substance Abuse
+      multiple: false
+      levels:
+      flaws:
+      -
+        name: Addiction
+        value: 1
+      -
+        name: Severe Addiction
+        value: 2
+    -
+      name: Supernatural Situations
+      multiple: false
+      levels:
+      -
+        name: Unseemly Aura
+        value: 2
+      flaws:
+      -
+        name: Stigmata
+        value: 1
+      -
+        name: Crone's Curse
+        value: 2
+    
