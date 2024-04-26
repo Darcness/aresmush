@@ -12,8 +12,15 @@ module AresMUSH
 
     def self.get_cmd_handler(_client, cmd, _enactor)
       case cmd.root
-      when 'attribute'
-        AresMUSH::WoD5e::AttributesCmd
+      when 'sheet'
+        case cmd.switch
+        when 'set'
+          SheetSetCmd
+        when 'show'
+          SheetShowCmd
+        else
+          SheetCmd
+        end
       end
     end
   end
