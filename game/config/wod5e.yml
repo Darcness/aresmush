@@ -1,21 +1,21 @@
 wod5e:
   
   attributes:
-  - Physical:
+    Physical:
     - 
       name: Strength
     -
       name: Dexterity
     -
       name: Stamina
-  - Social:
+    Social:
     -
       name: Charisma
     -
       name: Manipulation
     -
       name: Composure
-  - Mental:
+    Mental:
     -
       name: Intelligence
     -
@@ -24,7 +24,7 @@ wod5e:
       name: Resolve
   
   skills:
-  - Physical:
+    Physical:
     -
       name: Athletics
       specialties:
@@ -120,7 +120,7 @@ wod5e:
       - Shelters
       - Urban Exploration
       - Woodlands
-  - Social:
+    Social:
     -
       name: Animal Ken
       specialties:
@@ -200,7 +200,7 @@ wod5e:
       name: Subterfuge
       specialties:
       - Bluff
-  - Mental:
+    Mental:
     -
       name: Academics
       specialties:
