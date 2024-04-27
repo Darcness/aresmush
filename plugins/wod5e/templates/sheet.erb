@@ -1,0 +1,8 @@
+%lh
+<%= character.name %>
+<%= center('%xn%xh[ Attributes ]%xn', 78, '%x!-') %>%xn
+ %xh<%= (attr_types_list.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
+<%= formatted_attributes_list  %>
+<%= center('%xn%xh[ Skills ]%xn', 78, '%x!-') %>%xn
+<%= formatted_skills_list  %>
+%lf
