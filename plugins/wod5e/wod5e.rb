@@ -23,5 +23,13 @@ module AresMUSH
         end
       end
     end
+
+    @@character_types = { # rubocop:disable Style/ClassVars
+      Hunter: 'hunter'
+    }
+
+    def self.character_types
+      @@character_types
+    end
   end
 end

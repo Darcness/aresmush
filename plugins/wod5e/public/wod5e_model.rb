@@ -3,12 +3,15 @@
 module AresMUSH
   class Character < Ohm::Model # :nodoc:
     include ObjectModel
+
+    attribute :character_type
+
     collection :attributes, 'AresMUSH::WoD5eAttribute'
     collection :skills, 'AresMUSH::WoD5eSkill'
     collection :advantages, 'AresMUSH::WoD5eAdvantage'
     collection :xp_log, 'AresMUSH::WoD5eXPLog'
 
-    attribute :total_experience, type: DataType::Float
+    attribute :total_experience, type: DataType::Float, default: 0.0
   end
 
   # Sheet Attribute

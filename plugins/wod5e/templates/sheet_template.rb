@@ -25,8 +25,11 @@ module AresMUSH
 
       def format_skill(skill_name)
         skill = character.skills.select { |s| s.name.downcase == skill_name.downcase }.first
+        values = [format_stat_triple(skill_name, skill ? skill.value.to_s : '0')]
 
-        format_stat_triple(skill_name, skill ? skill.value.to_s : '0')
+        skill&.specialties&.each { |s| values.push(left("-#{s}", 24)) }
+
+        values
       end
 
       def format_stat_double(left_text, right_text, right_size = 2)
@@ -48,10 +51,23 @@ module AresMUSH
       end
 
       def formatted_skills_list
-        ((0..(skills_dictionary[attr_types_list[0]].length - 1)).map do |i|
-           " #{(attr_types_list.map do |typename|
-                  format_skill(skills_dictionary[typename][i]['name'])
-                end).join('  ')} "
+        physicals = []
+        skills_dictionary[attr_types_list[0]].each do |phys_skill|
+          physicals.push(*format_skill(phys_skill['name']))
+        end
+
+        socials = []
+        skills_dictionary[attr_types_list[1]].each do |soci_skill|
+          socials.push(*format_skill(soci_skill['name']))
+        end
+
+        mentals = []
+        skills_dictionary[attr_types_list[2]].each do |ment_skill|
+          mentals.push(*format_skill(ment_skill['name']))
+        end
+
+        ((0..([physicals.length, mentals.length, socials.length].max - 1)).map do |i|
+           " #{physicals[i] || left('', 24)}  #{socials[i] || left('', 24)}  #{mentals[i]}"
          end).join('%R')
       end
     end
