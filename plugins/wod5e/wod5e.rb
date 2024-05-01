@@ -2,12 +2,14 @@
 
 module AresMUSH
   module WoD5e # :nodoc:
+    PLUGIN_NAME = 'wod5e'
+
     def self.plugin_dir
       File.dirname(__FILE__)
     end
 
     def self.shortcuts
-      Global.read_config('wod5e', 'shortcuts')
+      Global.read_config(PLUGIN_NAME, 'shortcuts')
     end
 
     def self.get_cmd_handler(_client, cmd, _enactor)

@@ -8,8 +8,8 @@ module AresMUSH
 
       def initialize(char)
         @character = char
-        @attr_dictionary = Global.read_config('wod5e', 'attributes')
-        @skills_dictionary = Global.read_config('wod5e', 'skills')
+        @attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
+        @skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
         super "#{File.dirname(__FILE__)}/sheet.erb"
       end
 
