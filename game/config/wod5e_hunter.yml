@@ -24,6 +24,7 @@ wod5e:
     -
       name: Linguistics
       multiple: true
+      secondary: false
       levels:
       - 
         name: Language
@@ -35,6 +36,7 @@ wod5e:
     -
       name: Looks
       multiple: false
+      secondary: false
       levels:
       -
         name: Beautiful
@@ -52,6 +54,7 @@ wod5e:
     -
       name: Nutritionist
       multiple: false
+      secondary: false
       levels:
       -
         name: Solo Cooking
@@ -63,6 +66,7 @@ wod5e:
     -
       name: Psychological Traits
       multiple: true
+      secondary: false
       levels:
       flaws:
       -
@@ -74,6 +78,7 @@ wod5e:
     -
       name: Substance Abuse
       multiple: false
+      secondary: false
       levels:
       flaws:
       -
@@ -85,6 +90,7 @@ wod5e:
     -
       name: Supernatural Situations
       multiple: false
+      secondary: false
       levels:
       -
         name: Unseemly Aura
@@ -96,4 +102,338 @@ wod5e:
       -
         name: Crone's Curse
         value: 2
-    
+    -
+      name: Allies
+      multiple: true
+      secondary: true
+      levels:
+      -
+        name: Allies
+        value: 1
+      -
+        name: Allies
+        value: 2
+      -
+        name: Allies
+        value: 3
+      -
+        name: Allies
+        value: 4
+      -
+        name: Allies
+        value: 5
+      flaws:
+      - 
+        name: Enemy
+        value: 1
+      - 
+        name: Enemy
+        value: 2
+      - 
+        name: Enemy
+        value: 3
+    -
+      name: Contacts
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Contacts
+        value: 1
+      -
+        name: Contacts
+        value: 2
+      -
+        name: Contacts
+        value: 3
+      flaws:
+    -
+      name: Fame
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Fame
+        value: 1
+      -
+        name: Fame
+        value: 2
+      -
+        name: Fame
+        value: 3
+      -
+        name: Fame
+        value: 4
+      -
+        name: Fame
+        value: 5
+      flaws:
+      -
+        name: Infamy
+        value: 2
+      -
+        name: Dark Secret
+        value: 1
+      -
+        name: Infamous Partner
+        value: 1
+    -
+      name: Influence
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Influence
+        value: 1
+      -
+        name: Influence
+        value: 2
+      -
+        name: Influence
+        value: 3
+      -
+        name: Influence
+        value: 4
+      -
+        name: Influence
+        value: 5
+      flaws:
+      -
+        name: Despised
+        value: 2
+      -
+        name: Disliked
+        value: 1
+    -
+      name: Mask
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Mask
+        value: 1
+      -
+        name: Mask
+        value: 2
+      flaws:
+      -
+        name: Person of Interest
+        value: 2
+      -
+        name: Serial Error
+        value: 1
+    -
+      name: Zeroed
+      multiple: false
+      secondary: false
+      levels:
+      -
+        name: Zeroed
+        value: 1
+    -
+      name: Cobbler
+      multiple: false
+      secondary: false
+      levels:
+      -
+        name: Cobbler
+        value: 1
+    -
+      name: Mentor
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Mentor
+        value: 1
+      -
+        name: Mentor
+        value: 2
+      -
+        name: Mentor
+        value: 3
+      -
+        name: Mentor
+        value: 4
+      -
+        name: Mentor
+        value: 5
+      flaws:
+      - 
+        name: Adversary
+        value: 1
+      - 
+        name: Adversary
+        value: 2
+      - 
+        name: Adversary
+        value: 3
+    -
+      name: Resources
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Resources
+        value: 1
+      -
+        name: Resources
+        value: 2
+      -
+        name: Resources
+        value: 3
+      -
+        name: Resources
+        value: 4
+      -
+        name: Resources
+        value: 5
+      flaws:
+      -
+        name: Destitute
+        value: 1
+    -
+      name: Retainers
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Retainers
+        value: 1
+      -
+        name: Retainers
+        value: 2
+      -
+        name: Retainers
+        value: 3
+      -
+        name: Retainers
+        value: 4
+      -
+        name: Retainers
+        value: 5
+      flaws:
+      -
+        name: Stalkers
+        value: 1
+    -
+      name: Status
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Status
+        value: 1
+      -
+        name: Status
+        value: 2
+      -
+        name: Status
+        value: 3
+      -
+        name: Status
+        value: 4
+      -
+        name: Status
+        value: 5
+      flaws:
+      -
+        name: Suspect
+        value: 1
+      -
+        name: Shunned
+        value: 2
+    -
+      name: Safe House
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Safe House
+        value: 1
+      -
+        name: Safe House
+        value: 2
+      -
+        name: Safe House
+        value: 3
+      flaws:
+      -
+        name: No Safe House
+        value: 1
+      -
+        name: Compromised
+        value: 2
+    -
+      name: Hidden Armory
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Hidden Armory
+        value: 1
+      flaws:
+    -
+      name: Panic Room
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Panic Room
+        value: 1
+      flaws:
+    -
+      name: Watchmen
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Watchmen
+        value: 1
+        flaws:
+    -
+      name: Laboratory
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Laboratory
+        value: 1
+        flaws:
+    -
+      name: Luxury
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Luxury
+        value: 1
+        flaws:
+    -
+      name: Postern
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Postern
+        value: 1
+        flaws:
+    -
+      name: Security System
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Security System
+        value: 1
+        flaws:
+    -
+      name: Surgery
+      multiple: true
+      secondary: false
+      levels:
+      -
+        name: Surgery
+        value: 1
+        flaws:
+      
