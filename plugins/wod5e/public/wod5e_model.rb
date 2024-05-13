@@ -39,6 +39,9 @@ module AresMUSH
     attribute :name
     attribute :value, type: DataType::Integer
     attribute :secondary_value, type: DataType::Integer
+    collection :children, 'AresMUSH::WoD5eAttribute'
+
+    reference :parent, 'AresMUSH::WoD5eAttribute'
 
     reference :character, 'AresMUSH::Character'
   end

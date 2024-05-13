@@ -364,76 +364,30 @@ wod5e:
       -
         name: Compromised
         value: 2
-    -
-      name: Hidden Armory
-      multiple: true
-      secondary: false
-      levels:
+      traits:
       -
-        name: Hidden Armory
-        value: 1
-      flaws:
-    -
-      name: Panic Room
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Panic Room
-        value: 1
-      flaws:
-    -
-      name: Watchmen
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Watchmen
-        value: 1
-        flaws:
-    -
-      name: Laboratory
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Laboratory
-        value: 1
-        flaws:
-    -
-      name: Luxury
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Luxury
-        value: 1
-        flaws:
-    -
-      name: Postern
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Postern
-        value: 1
-        flaws:
-    -
-      name: Security System
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Security System
-        value: 1
-        flaws:
-    -
-      name: Surgery
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Surgery
-        value: 1
-        flaws:
-      
+        multiple: true
+        secondary: false
+        levels:
+        -
+          name: Hidden Armory
+          value: 1
+        -
+          name: Panic Room
+          value: 1
+        -
+          name: Watchmen
+          value: 1
+        -
+          name: Laboratory
+          value: 1
+        -
+          name: Luxury
+          value: 1
+        -
+          name: Security System
+          value: 1
+        -
+          name: Surgery
+          value: 1
+        
