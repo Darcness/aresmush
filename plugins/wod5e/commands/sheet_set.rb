@@ -8,7 +8,15 @@ module AresMUSH
 
       attr_accessor :target_name, :stat_type, :stat_name, :main_value, :optional_value
 
-      def self.parse_args
+      @@stat_types = { # rubocop:disable Style/ClassVars
+        Basic: 'basic',
+        Attribute: 'attribute',
+        Skill: 'skill',
+        Specialty: 'specialty',
+        Advantage: 'advantage'
+      }
+
+      def parse_args
         args = cmd.parse_args(%r{(?<arg1>[^(=|/)]+)=?(?<arg2>[^/]+)?/?(?<arg3>[^=]+)?=?(?<arg4>[^/]+)?/?(?<arg5>.+)?})
         @target_name = titlecase_arg(args.arg1)
         @stat_type = titlecase_arg(args.arg2)
@@ -17,41 +25,47 @@ module AresMUSH
         @optional_value = titlecase_arg(args.arg5)
       end
 
-      def self.check_args
+      def check_args
         case stat_type.downcase
-        when 'attribute'
+        when @@stat_types[:Basic]
+          validate_basic_args
+        when @@stat_types[:Attribute]
           validate_attribute_args
-        when 'skill'
+        when @@stat_types[:Skill]
           validate_skill_args
-        when 'specialty'
+        when @@stat_types[:Specialty]
           validate_specialty_args
+        when @@stat_types[:Advantage]
+          validate_advantage_args
         else
-          "Invalid type:#{stat_type}"
+          "Invalid type: #{stat_type}"
         end
       end
 
-      def self.required_args
+      def required_args
         [target_name, stat_type, stat_name, main_value]
       end
 
-      def self.handle
+      def handle
         AresMUSH::ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
           case stat_type.downcase
-          when 'attribute'
+          when @@stat_types[:Basic]
+            handle_basic(model)
+          when @@stat_types[:Attribute]
             handle_attrib(model)
-          when 'skill'
+          when @@stat_types[:Skill]
             handle_skill(model)
-          when 'specialty'
+          when @@stat_types[:Specialty]
             handle_specialty(model)
-          when 'advantage'
-            handle_advantage(model)
+          # when @@stat_types[:Advantage]
+          #   handle_advantage(model)
           else
-            "Invalid type: #{stat_type} -- We got here past check_args, which is no bueno. Talk to a coder, for realz."
+            client.emit_failure "Invalid type: #{stat_type} -- We got here past check_args, which is no bueno. Talk to a coder, for realz."
           end
         end
       end
 
-      def self.validate_numeric_main_value
+      def validate_numeric_main_value
         begin
           Integer(main_value)
         rescue TypeError, ArgumentError
@@ -60,7 +74,21 @@ module AresMUSH
         nil
       end
 
-      def self.validate_advantage_args
+      def validate_basic_args
+        case stat_name.downcase
+        when 'type'
+          if WoD5e.character_types.key(main_value.downcase)
+            @main_value = main_value.downcase
+            nil
+          else
+            "Invalid Type: #{main_value}"
+          end
+        else
+          "Invalid Stat: #{stat_name}"
+        end
+      end
+
+      def validate_advantage_args
         AresMUSH::ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
           if model.character_type.nil? || model.character_type.empty?
             "#{target_name} must have a type specified first"
@@ -79,7 +107,7 @@ module AresMUSH
         end
       end
 
-      def self.validate_attribute_args
+      def validate_attribute_args
         attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
 
         attr = attr_dictionary.values.flatten.select { |attr_data| attr_data['name'].start_with?(stat_name) }.first
@@ -93,7 +121,7 @@ module AresMUSH
         validate_numeric_main_value
       end
 
-      def self.valid_skill_name
+      def validate_skill_name
         skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
 
         skill = skills_dictionary.values.flatten.select { |skill_data| skill_data['name'].start_with?(stat_name) }.first
@@ -106,15 +134,15 @@ module AresMUSH
         end
       end
 
-      def self.validate_skill_args
+      def validate_skill_args
         validate_skill_name || validate_numeric_main_value
       end
 
-      def self.validate_specialty_args
+      def validate_specialty_args
         validate_skill_name
       end
 
-      def self.handle_attrib(model)
+      def handle_attrib(model)
         attrib = model.attributes.select { |a| a.name == stat_name }.first
 
         if attrib
@@ -125,7 +153,7 @@ module AresMUSH
         client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
-      def self.handle_skill(model)
+      def handle_skill(model)
         skill = model.skills.select { |s| s.name == stat_name }.first
 
         if skill
@@ -136,7 +164,7 @@ module AresMUSH
         client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
-      def self.handle_specialty(model)
+      def handle_specialty(model)
         skill = model.skills.select { |s| s.name == stat_name }.first
 
         if skill
@@ -165,15 +193,23 @@ module AresMUSH
         end
 
         output = if main.value.starts_with?('!')
-                   "#{target_name} removed #{main_value} from #{stat_name} specialties."
+                   "#{model.name} removed #{main_value} from #{stat_name} specialties."
                  else
-                   "#{target_name} added #{main_value} to #{stat_name} specialties."
+                   "#{model.name} added #{main_value} to #{stat_name} specialties."
                  end
 
         client.emit_success output
       end
 
-      def self.handle_advantage(model) end
+      def handle_basic(model)
+        case stat_name.downcase
+        when 'type'
+          model.update(character_type: main_value)
+          client.emit_success "#{model.name} set Type to: #{main_value.capitalize}."
+        end
+      end
+
+      def handle_advantage(model) end
     end
   end
 end

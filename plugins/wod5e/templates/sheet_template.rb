@@ -70,6 +70,10 @@ module AresMUSH
            " #{physicals[i] || left('', 24)}  #{socials[i] || left('', 24)}  #{mentals[i]}"
          end).join('%R')
       end
+
+      def formatted_advantages_list
+        
+      end
     end
   end
 end
