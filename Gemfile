@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 source 'http://rubygems.org'
+
+# rubocop:disable Bundler/OrderedGems
+# rubocop:disable Style/StringLiterals
 
 gem 'ansi', '~> 1.5'
 
@@ -29,3 +34,8 @@ gem 'sassc', '~> 2.4.0'
 gem 'htmlentities', '~>4.3.4'
 gem 'handlebars-engine', '~>0.3'
 gem "rack", ">= 2.2.8.1"
+
+gem "rubocop", "~> 1.63", group: :development
+
+# rubocop:enable Bundler/OrderedGems
+# rubocop:enable Style/StringLiterals
