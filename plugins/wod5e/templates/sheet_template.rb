@@ -27,8 +27,30 @@ module AresMUSH
         skill = character.skills.select { |s| s.name.downcase == skill_name.downcase }.first
         values = [format_stat_triple(skill_name, skill ? skill.value.to_s : '0')]
 
-        skill&.specialties&.each { |s| values.push(left("-#{s}", 24)) }
+        skill&.specialties&.each { |s| values.push(left(" -#{s}", 24)) }
 
+        values
+      end
+
+      def format_advantages(advantages, level = 0)
+        values = []
+        advantages.each do |advantage|
+          next unless advantage.respond_to?(:name) &&
+                      advantage.respond_to?(:value) &&
+                      advantage.respond_to?(:secondary_value) &&
+                      advantage.respond_to?(:children)
+
+          left_text = advantage.name
+          left_text.prepend("#{' ' * (level * 2)}-") if level.positive?
+
+          right_text = advantage.value
+          right_text += " (#{advantage.secondary_value})" if advantage.secondary_value.positive?
+
+          text_out = format_stat_double(left_text, right_text)
+
+          values << text_out
+          values.push(*format_advantages(advantage.children, level + 1)) unless advantage.children.empty?
+        end
         values
       end
 
@@ -72,7 +94,13 @@ module AresMUSH
       end
 
       def formatted_advantages_list
-        
+        advantages = character.advantages.sort_by(&:name)
+        advantages_out = format_advantages(advantages)
+        midpoint = (advantages_out.length / 2) + (advantages_out.length % 2)
+
+        ((0..(midpoint - 1)).map do |i|
+          " #{advantages_out[i]} #{advantages_out[i + midpoint]} "
+        end).join('%R')
       end
     end
   end

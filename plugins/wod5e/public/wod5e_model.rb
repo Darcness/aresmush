@@ -8,10 +8,14 @@ module AresMUSH
 
     collection :attributes, 'AresMUSH::WoD5eAttribute'
     collection :skills, 'AresMUSH::WoD5eSkill'
-    collection :advantages, 'AresMUSH::WoD5eAdvantage'
+    collection :all_advantages, 'AresMUSH::WoD5eAdvantage'
     collection :xp_log, 'AresMUSH::WoD5eXPLog'
 
     attribute :total_experience, type: DataType::Float, default: 0.0
+
+    def advantages
+      WoD5eAdvantage.find(character_id: id).select { |a| a.parent_id.nil? }
+    end
   end
 
   # Sheet Attribute
@@ -39,11 +43,13 @@ module AresMUSH
     attribute :name
     attribute :value, type: DataType::Integer
     attribute :secondary_value, type: DataType::Integer
-    collection :children, 'AresMUSH::WoD5eAttribute'
 
-    reference :parent, 'AresMUSH::WoD5eAttribute'
+    reference :parent, :WoD5eAdvantage
+    reference :character, :Character
 
-    reference :character, 'AresMUSH::Character'
+    def children
+      WoD5eAdvantage.find(parent_id: id)
+    end
   end
 
   # Sheet XP Expenditure
