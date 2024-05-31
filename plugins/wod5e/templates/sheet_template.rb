@@ -98,6 +98,13 @@ module AresMUSH
         advantages_out = format_advantages(advantages)
         midpoint = (advantages_out.length / 2) + (advantages_out.length % 2)
 
+        # We want to keep sub-objects in the same column as their parent.
+        # If the first item in the second column is a sub-object (starts with a space),
+        # push forward until we find a main-line item.
+        if advantages_out[midpoint].starts_with?(' ')
+          midpoint += advantages_out[midpoint, advantages_out.length].index { |x| !x.starts_with?(' ') }
+        end
+
         ((0..(midpoint - 1)).map do |i|
           " #{advantages_out[i]} #{advantages_out[i + midpoint]} "
         end).join('%R')
