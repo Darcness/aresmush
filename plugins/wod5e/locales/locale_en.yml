@@ -1,3 +1,8 @@
 en:
   wod5e:
-    title: World of Darkness
+    title: World of Darkness 5th Edition
+    invalid_type: "Invalid Type: "
+    sheet_init_exists_warn: "%{name} already has a sheet. Initializing will delete existing sheet.  To confirm: sheet/init %{name}=%{type}/confirm"
+    sheet_init_complete: "Sheet for %{name} initialized with type: %{character_type}!"
+    sheet_init_nothing_to_confirm: "%{name} does not have a sheet! Nothing to confirm!"
+    sheet_obj_missing: "%{name} doesn't have an initialized sheet! To fix, type: sheet/init %{name}=<characterType>"

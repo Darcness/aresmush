@@ -1,63 +1,77 @@
 # frozen_string_literal: true
 
 module AresMUSH
-  class Character < Ohm::Model # :nodoc:
-    include ObjectModel
+  module WoD5e
+    class Sheet < Ohm::Model # :nodoc:
+      include ObjectModel
 
-    attribute :character_type
+      attribute :character_type
 
-    collection :attributes, 'AresMUSH::WoD5eAttribute'
-    collection :skills, 'AresMUSH::WoD5eSkill'
-    collection :all_advantages, 'AresMUSH::WoD5eAdvantage'
-    collection :xp_log, 'AresMUSH::WoD5eXPLog'
+      reference :character, 'AresMUSH::Character'
 
-    attribute :total_experience, type: DataType::Float, default: 0.0
+      collection :attributes, :WoD5eAttribute
+      collection :skills, :WoD5eSkill
+      collection :all_advantages, :WoD5eAdvantage
+      collection :xp_log, :WoD5eXPLog
 
-    def advantages
-      WoD5eAdvantage.find(character_id: id).select { |a| a.parent_id.nil? }
+      attribute :total_experience, type: DataType::Float, default: 0.0
+
+      def advantages
+        WoD5eAdvantage.find(sheet_id: id).select { |a| a.parent_id.nil? }
+      end
     end
-  end
 
-  # Sheet Attribute
-  class WoD5eAttribute < Ohm::Model
-    include ObjectModel
-    attribute :name
-    attribute :value, type: DataType::Integer
+    class Character < Ohm::Model # :nodoc:
+      include ObjectModel
 
-    reference :character, 'AresMUSH::Character'
-  end
-
-  # Sheet Skill
-  class WoD5eSkill < Ohm::Model
-    include ObjectModel
-    attribute :name
-    attribute :value, type: DataType::Integer
-    attribute :specialties, type: DataType::Array, default: []
-
-    reference :character, 'AresMUSH::Character'
-  end
-
-  # Sheet Advantage
-  class WoD5eAdvantage < Ohm::Model
-    include ObjectModel
-    attribute :name
-    attribute :value, type: DataType::Integer
-    attribute :secondary_value, type: DataType::Integer
-
-    reference :parent, :WoD5eAdvantage
-    reference :character, :Character
-
-    def children
-      WoD5eAdvantage.find(parent_id: id)
+      reference :wod5e_sheet, 'AresMUSH::Sheet'
     end
-  end
 
-  # Sheet XP Expenditure
-  class WoD5eXPLog < Ohm::Model
-    include ObjectModel
-    attribute :value, type: DataType::Float
-    attribute :note
+    # Sheet Attribute
+    class WoD5eAttribute < Ohm::Model
+      include ObjectModel
 
-    reference :character, 'AresMUSH::Character'
+      attribute :name
+      attribute :value, type: DataType::Integer
+
+      reference :sheet, :Sheet
+    end
+
+    # Sheet Skill
+    class WoD5eSkill < Ohm::Model
+      include ObjectModel
+
+      attribute :name
+      attribute :value, type: DataType::Integer
+      attribute :specialties, type: DataType::Array, default: []
+
+      reference :sheet, :Sheet
+    end
+
+    # Sheet Advantage
+    class WoD5eAdvantage < Ohm::Model
+      include ObjectModel
+
+      attribute :name
+      attribute :value, type: DataType::Integer
+      attribute :secondary_value, type: DataType::Integer
+
+      reference :parent, :WoD5eAdvantage
+      reference :sheet, :Sheet
+
+      def children
+        WoD5eAdvantage.find(parent_id: id)
+      end
+    end
+
+    # Sheet XP Expenditure
+    class WoD5eXPLog < Ohm::Model
+      include ObjectModel
+
+      attribute :value, type: DataType::Float
+      attribute :note
+
+      reference :sheet, :Sheet
+    end
   end
 end

@@ -20,6 +20,8 @@ module AresMUSH
           SheetSetCmd
         when 'show'
           SheetShowCmd
+        when 'init'
+          SheetInitCmd
         else
           SheetCmd
         end
@@ -32,6 +34,18 @@ module AresMUSH
 
     def self.character_types
       @@character_types
+    end
+
+    # @yieldparam model [Character]
+    def self.validate_sheet(target_name, client, enactor, &block) # rubocop:disable Lint/UnusedMethodArgument
+      ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+        if model.wod5e_sheet.nil?
+          client.emit_failure(t('wod5e.sheet_obj_missing', name: model.name))
+          next
+        end
+
+        yield model
+      end
     end
   end
 end

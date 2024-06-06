@@ -47,7 +47,7 @@ module AresMUSH
       end
 
       def handle
-        AresMUSH::ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+        validate_sheet do |model|
           case stat_type.downcase
           when @@stat_types[:Basic]
             handle_basic(model)
@@ -90,16 +90,16 @@ module AresMUSH
 
       def validate_advantage_args
         AresMUSH::ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
-          if model.character_type.nil? || model.character_type.empty?
+          if model.wod5e_sheet.character_type.nil? || model.wod5e_sheet.character_type.empty?
             "#{target_name} must have a type specified first"
-          elsif !AresMUSH::WoD5e.character_types.key(model.character_type)
-            model.update(:character_type, '')
+          elsif !AresMUSH::WoD5e.character_types.key(model.wod5e_sheet.character_type)
+            model.wod5e_sheet.update(:character_type, '')
             "#{target_name} has an invalid type! Resetting...."
           end
 
-          type_data = Global.read_config(PLUGIN_NAME, model.character_type)
+          type_data = Global.read_config(PLUGIN_NAME, model.wod5e_sheet.character_type)
           if type_data['advantages'].select { |adv| adv['name'].start_with?(stat_name) }.first.nil
-            "#{stat_name} is not a valid Advantage for #{model.character_type}"
+            "#{stat_name} is not a valid Advantage for #{model.wod5e_sheet.character_type}"
           end
 
           validated_main_value = validate_numeric_main_value
@@ -143,29 +143,29 @@ module AresMUSH
       end
 
       def handle_attrib(model)
-        attrib = model.attributes.select { |a| a.name == stat_name }.first
+        attrib = model.wod5e_sheet.attributes.select { |a| a.name == stat_name }.first
 
         if attrib
           attrib.update(value: main_value.to_i)
         else
-          WoD5eAttribute.create(name: stat_name, value: main_value.to_i, character: model)
+          WoD5eAttribute.create(name: stat_name, value: main_value.to_i, wod_sheet: model.wod5e_sheet)
         end
         client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
       def handle_skill(model)
-        skill = model.skills.select { |s| s.name == stat_name }.first
+        skill = model.wod5e_sheet.skills.select { |s| s.name == stat_name }.first
 
         if skill
           skill.update(value: main_value.to_i)
         else
-          AresMUSH::WoD5eSkill.create(name: stat_name, value: main_value.to_i, character: model)
+          AresMUSH::WoD5eSkill.create(name: stat_name, value: main_value.to_i, wod_sheet: model.wod5e_sheet)
         end
         client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
       def handle_specialty(model)
-        skill = model.skills.select { |s| s.name == stat_name }.first
+        skill = model.wod5e_sheet.skills.select { |s| s.name == stat_name }.first
 
         if skill
           new_specialties = skill.specialties || []
@@ -189,13 +189,13 @@ module AresMUSH
           return
         else
           AresMUSH::WoD5eSkill.create(name: stat_name, value: 0,
-                                      specialties: [main_value], character: model)
+                                      specialties: [main_value], wod_sheet: model.wod5e_sheet)
         end
 
         output = if main.value.starts_with?('!')
-                   "#{model.name} removed #{main_value} from #{stat_name} specialties."
+                   "#{model.wod5e_sheet.name} removed #{main_value} from #{stat_name} specialties."
                  else
-                   "#{model.name} added #{main_value} to #{stat_name} specialties."
+                   "#{model.wod5e_sheet.name} added #{main_value} to #{stat_name} specialties."
                  end
 
         client.emit_success output
@@ -204,8 +204,8 @@ module AresMUSH
       def handle_basic(model)
         case stat_name.downcase
         when 'type'
-          model.update(character_type: main_value)
-          client.emit_success "#{model.name} set Type to: #{main_value.capitalize}."
+          model.wod5e_sheet.update(character_type: main_value)
+          client.emit_success "#{model.wod5e_sheet.name} set Type to: #{main_value.capitalize}."
         end
       end
 

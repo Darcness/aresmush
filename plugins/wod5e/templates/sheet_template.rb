@@ -4,10 +4,11 @@ module AresMUSH
   module WoD5e
     # Sheet Template
     class SheetTemplate < AresMUSH::ErbTemplateRenderer
-      attr_accessor :character, :attr_dictionary, :skills_dictionary
+      attr_accessor :character, :sheet, :attr_dictionary, :skills_dictionary
 
       def initialize(char)
         @character = char
+        @sheet = @character.wod5e_sheet
         @attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
         @skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
         super "#{File.dirname(__FILE__)}/sheet.erb"
@@ -18,13 +19,13 @@ module AresMUSH
       end
 
       def format_attribute(attribute_name)
-        attribute = character.attributes.select { |a| a.name.downcase == attribute_name.downcase }.first
+        attribute = sheet.attributes.select { |a| a.name.downcase == attribute_name.downcase }.first
 
         format_stat_triple(attribute_name, attribute ? attribute.value.to_s : '0')
       end
 
       def format_skill(skill_name)
-        skill = character.skills.select { |s| s.name.downcase == skill_name.downcase }.first
+        skill = sheet.skills.select { |s| s.name.downcase == skill_name.downcase }.first
         values = [format_stat_triple(skill_name, skill ? skill.value.to_s : '0')]
 
         skill&.specialties&.each { |s| values.push(left(" -#{s}", 24)) }
@@ -94,14 +95,16 @@ module AresMUSH
       end
 
       def formatted_advantages_list
-        advantages = character.advantages.sort_by(&:name)
+        advantages = sheet.advantages.sort_by(&:name)
+        return unless advantages.count.positive?
+
         advantages_out = format_advantages(advantages)
         midpoint = (advantages_out.length / 2) + (advantages_out.length % 2)
 
         # We want to keep sub-objects in the same column as their parent.
         # If the first item in the second column is a sub-object (starts with a space),
         # push forward until we find a main-line item.
-        if advantages_out[midpoint].starts_with?(' ')
+        if midpoint.positive? && advantages_out[midpoint].starts_with?(' ')
           midpoint += advantages_out[midpoint, advantages_out.length].index { |x| !x.starts_with?(' ') }
         end
 
