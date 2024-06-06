@@ -42,7 +42,11 @@ module AresMUSH
           model.wod5e_sheet.delete if has_sheet
 
           sheet = Sheet.create(character: model, character_type: character_type.downcase)
+        #   client.emit sheet
           model.update(wod5e_sheet: sheet)
+        #   client.emit model
+        #   client.emit model.wod5e_sheet
+        #   client.emit Character.find_one_by_name(model.name).wod5e_sheet
           client.emit_success t('wod5e.sheet_init_complete', name: model.name, character_type: model.wod5e_sheet.character_type.capitalize)
         end
       end

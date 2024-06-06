@@ -19,7 +19,7 @@ module AresMUSH
       end
 
       def format_attribute(attribute_name)
-        attribute = sheet.attributes.select { |a| a.name.downcase == attribute_name.downcase }.first
+        attribute = sheet.attribs.select { |a| a.name.downcase == attribute_name.downcase }.first
 
         format_stat_triple(attribute_name, attribute ? attribute.value.to_s : '0')
       end
