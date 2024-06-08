@@ -12,3 +12,5 @@ Currently, we support the following game systems:
 
 ## Commands
 `sheet` - View your sheet.
+
+`sheet/show <player>` - Show your sheet to another player.
