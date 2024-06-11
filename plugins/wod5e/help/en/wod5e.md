@@ -2,6 +2,8 @@
 toc: WoD5e
 summary: The World of Darkness - 5th Edition
 order: 1
+aliases:
+- sheet
 ---
 # World of Darkness - 5th Edition Core systems
 
@@ -11,6 +13,3 @@ Currently, we support the following game systems:
 - Hunter: the Reckoning
 
 ## Commands
-`sheet` - View your sheet.
-
-`sheet/show <player>` - Show your sheet to another player.

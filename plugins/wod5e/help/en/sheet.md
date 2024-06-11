@@ -1,10 +1,14 @@
 ---
 toc: WoD5e
-summary: Staff Commands
+summary: Sheet Commands
 ---
-# Staff Commands
+# Sheet Commands
 
-`sheet <player>` - See a player's sheet
+`sheet [<player>]` - View the sheet of a player (yourself if none specified)
+
+`sheet/show <player>` - Show your sheet to another player.
+
+# Staff-only Commands
 
 `sheet/init <player>=<type>[/confirm]` - Initializes a `player`'s sheet with the specified `type`.  `/confirm` will delete an existing sheet wholesale and create a new one.
 
@@ -24,7 +28,7 @@ summary: Staff Commands
       subValue: Not Used
   `specialty`:
     statName: Name of any skill (`Athletics`, `Larceny`, etc.)
-      mainValue: Desired Specialty
+      mainValue: Desired Specialty, prefixed with `!` to remove (`Acrobatics` to add an Acrobatics specialty, `!Acrobatics` to remove the specialty)
       subValue: Not Used
   `advantage`:
     statName: Name of the Advantage (Merit, Flaw, or Background -- Notes should)
