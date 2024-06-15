@@ -47,7 +47,7 @@ module AresMUSH
       end
 
       def handle
-        validate_sheet do |model|
+        WoD5e.validate_sheet(target_name, enactor, client) do |model|
           case stat_type.downcase
           when @@stat_types[:Basic]
             handle_basic(model)
@@ -66,80 +66,73 @@ module AresMUSH
       end
 
       def validate_numeric_main_value
-        begin
-          Integer(main_value)
-        rescue TypeError, ArgumentError
-          "Invalid Value: #{main_value}"
-        end
+        @main_value = Integer(main_value)
         nil
+      rescue TypeError, ArgumentError
+        "Invalid Value: #{main_value}"
       end
 
       def validate_basic_args
         case stat_name.downcase
         when 'type'
-          if WoD5e.character_types.key(main_value.downcase)
-            @main_value = main_value.downcase
-            nil
-          else
-            "Invalid Type: #{main_value}"
-          end
+          return "Invalid Type: #{main_value}" unless WoD5e.character_types.key(main_value.downcase)
+
+          @main_value = main_value.downcase
         else
           "Invalid Stat: #{stat_name}"
         end
       end
 
+      def validate_attribute_args
+        @stat_name = AresMUSH::WoD5e::StatValidators.validate_attribute_name(stat_name)
+        validate_numeric_main_value
+      rescue StandardError => e
+        e.message
+      end
+
+      def validate_skill_args
+        @stat_name = StatValidators.validate_skill_name(stat_name)
+        validate_numeric_main_value
+      rescue StandardError => e
+        e.message
+      end
+
+      def validate_specialty_args
+        @stat_name = StatValidators.validate_skill_name(stat_name)
+      rescue StandardError => e
+        e.message
+      end
+
       def validate_advantage_args
-        AresMUSH::ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+        ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
           if model.wod5e_sheet.character_type.nil? || model.wod5e_sheet.character_type.empty?
             "#{target_name} must have a type specified first"
-          elsif !AresMUSH::WoD5e.character_types.key(model.wod5e_sheet.character_type)
+          elsif !WoD5e.character_types.key(model.wod5e_sheet.character_type)
             model.wod5e_sheet.update(:character_type, '')
             "#{target_name} has an invalid type! Resetting...."
           end
 
-          type_data = Global.read_config(PLUGIN_NAME, model.wod5e_sheet.character_type)
-          if type_data['advantages'].select { |adv| adv['name'].start_with?(stat_name) }.first.nil
-            "#{stat_name} is not a valid Advantage for #{model.wod5e_sheet.character_type}"
+          # Expected Syntax: <AdvantageName>[ (<Note>)] -- ex: Safe House (Apartment 1) OR Resources
+          # Step 1, find the note, strip it out.:
+          unless (note_start = stat_name.index('(')).nil?
+            note = stat_name[(note_start + 1)..]
+            note = note[0..-2] if note.end_with?(')')
+            @stat_name = stat_name[0, (note_start - 1)].strip
           end
+
+          # Step 2, check the Advantage name
+          begin
+            @stat_name = StatValidators.validate_advantage_name(stat_name, model.wod5e_sheet.character_type)
+          rescue StandardError => e
+            return e.message
+          end
+
+          # Step 3, put it all back together again.
+          @stat_name = "#{stat_name} (#{note})" unless note.nil?
 
           validated_main_value = validate_numeric_main_value
           validated_main_value unless validated_main_value.nil?
         end
-      end
-
-      def validate_attribute_args
-        attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
-
-        attr = attr_dictionary.values.flatten.select { |attr_data| attr_data['name'].start_with?(stat_name) }.first
-
-        if attr.nil?
-          "Invalid Attribute #{stat_name}"
-        else
-          @stat_name = attr['name']
-        end
-
-        validate_numeric_main_value
-      end
-
-      def validate_skill_name
-        skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
-
-        skill = skills_dictionary.values.flatten.select { |skill_data| skill_data['name'].start_with?(stat_name) }.first
-
-        if skill.nil?
-          "Invalid Skill #{stat_name}"
-        else
-          @stat_name = skill['name']
-          nil
-        end
-      end
-
-      def validate_skill_args
-        validate_skill_name || validate_numeric_main_value
-      end
-
-      def validate_specialty_args
-        validate_skill_name
       end
 
       def handle_attrib(model)
@@ -148,9 +141,9 @@ module AresMUSH
         if attrib
           attrib.update(value: main_value.to_i)
         else
-          WoD5eAttribute.create(name: stat_name, value: main_value.to_i, wod_sheet: model.wod5e_sheet)
+          WoD5eAttrib.create(name: stat_name, value: main_value.to_i, sheet: model.wod5e_sheet)
         end
-        client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
+        client.emit_success "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
       def handle_skill(model)
@@ -159,9 +152,9 @@ module AresMUSH
         if skill
           skill.update(value: main_value.to_i)
         else
-          AresMUSH::WoD5eSkill.create(name: stat_name, value: main_value.to_i, wod_sheet: model.wod5e_sheet)
+          WoD5eSkill.create(name: stat_name, value: main_value.to_i, sheet: model.wod5e_sheet)
         end
-        client.emit "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
+        client.emit_success "#{target_name}'s #{stat_name} #{stat_type} set to #{main_value}."
       end
 
       def handle_specialty(model)
@@ -172,9 +165,10 @@ module AresMUSH
 
           if main_value.starts_with?('!')
             found_pos = new_specialties.index { |x| x == main_value[1, main_value.length] }
+            new_specialties.map(&:name)
 
             if found_pos.nil?
-              client.emit "ERROR: #{target_name} does not have #{main_value} specialty for #{stat_name}!"
+              client.emit_failure "#{target_name} does not have #{main_value} specialty for #{stat_name}!"
               return
             else
               new_specialties.delete_at(found_pos)
@@ -185,11 +179,13 @@ module AresMUSH
 
           skill.update(specialties: new_specialties)
         elsif main_value.starts_with?('!')
-          client.emit "ERROR: #{target_name} is missing skill: #{stat_name}!"
+          client.emit_failure "#{target_name} is missing skill: #{stat_name}!"
           return
         else
-          AresMUSH::WoD5eSkill.create(name: stat_name, value: 0,
-                                      specialties: [main_value], wod_sheet: model.wod5e_sheet)
+          WoD5eSkill.create(name: stat_name,
+                            value: 0,
+                            specialties: [main_value],
+                            sheet: model.wod5e_sheet)
         end
 
         output = if main.value.starts_with?('!')

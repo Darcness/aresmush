@@ -2,6 +2,8 @@
 
 module AresMUSH
   class Sheet < Ohm::Model # :nodoc:
+    include ObjectModel
+
     attribute :character_type
 
     reference :character, 'AresMUSH::Character'
@@ -11,7 +13,7 @@ module AresMUSH
     collection :all_advantages, 'AresMUSH::WoD5eAdvantage'
     collection :xp_log, 'AresMUSH::WoD5eXPLog'
 
-    attribute :total_experience, type: Ohm::DataTypes::DataType::Float, default: 0.0
+    attribute :total_experience, type: DataType::Float, default: 0.0
 
     def attributes2
       WoD5eAttrib.find(sheet_id: id)
@@ -30,29 +32,35 @@ module AresMUSH
 
   # Sheet Attribute
   class WoD5eAttrib < Ohm::Model
-    attribute :name
-    attribute :value, type: Ohm::DataTypes::DataType::Integer
+    include ObjectModel
 
-    reference :sheet, :Sheet
+    attribute :name
+    attribute :value, type: DataType::Integer
+
+    reference :sheet, 'AresMUSH::Sheet'
   end
 
   # Sheet Skill
   class WoD5eSkill < Ohm::Model
-    attribute :name
-    attribute :value, type: Ohm::DataTypes::DataType::Integer
-    attribute :specialties, type: Ohm::DataTypes::DataType::Array, default: []
+    include ObjectModel
 
-    reference :sheet, :Sheet
+    attribute :name
+    attribute :value, type: DataType::Integer
+    attribute :specialties, type: DataType::Array, default: []
+
+    reference :sheet, 'AresMUSH::Sheet'
   end
 
   # Sheet Advantage
   class WoD5eAdvantage < Ohm::Model
+    include ObjectModel
+
     attribute :name
-    attribute :value, type: Ohm::DataTypes::DataType::Integer
-    attribute :secondary_value, type: Ohm::DataTypes::DataType::Integer
+    attribute :value, type: DataType::Integer
+    attribute :secondary_value, type: DataType::Integer
 
     reference :parent, :WoD5eAdvantage
-    reference :sheet, :Sheet
+    reference :sheet, 'AresMUSH::Sheet'
 
     def children
       WoD5eAdvantage.find(parent_id: id)
@@ -61,9 +69,11 @@ module AresMUSH
 
   # Sheet XP Expenditure
   class WoD5eXPLog < Ohm::Model
-    attribute :value, type: Ohm::DataTypes::DataType::Float
+    include ObjectModel
+
+    attribute :value, type: DataType::Float
     attribute :note
 
-    reference :sheet, :Sheet
+    reference :sheet, 'AresMUSH::Sheet'
   end
 end
