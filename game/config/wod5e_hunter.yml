@@ -365,7 +365,6 @@ wod5e:
         name: Compromised
         value: 2
       traits:
-      -
         multiple: true
         secondary: false
         levels:
@@ -390,4 +389,14 @@ wod5e:
         -
           name: Surgery
           value: 1
+        flaws:
+        -
+          name: Creepy
+          value: 1
+        -
+          name: Haunted
+          value: 1
+        -
+          name: Compromised
+          value: 2
         

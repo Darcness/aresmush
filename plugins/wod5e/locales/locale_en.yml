@@ -6,3 +6,10 @@ en:
     sheet_init_complete: "Sheet for %{name} initialized with type: %{character_type}!"
     sheet_init_nothing_to_confirm: "%{name} does not have a sheet! Nothing to confirm!"
     sheet_obj_missing: "%{name} doesn't have an initialized sheet! To fix, type: sheet/init %{name}=<characterType>"
+    validators:
+      invalid_attribute: "Invalid Attribute: %{stat_name}"
+      invalid_skill: "Invalid Skill: %{stat_name}"
+      invalid_advantage: "Invalid Advantage for %{character_type}: %{stat_name}"
+      invalid_character_type: "Invalid character_type: %{character_type}"
+      invalid_trait: "Invalid Advantage for %{character_type}: %{advantage_name} / %{stat_name}"
+      missing_advantage: "Found name for %{name} but could not find advantage in DB! Please let a coder know."

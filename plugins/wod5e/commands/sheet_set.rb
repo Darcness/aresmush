@@ -57,27 +57,43 @@ module AresMUSH
             handle_skill(model)
           when @@stat_types[:Specialty]
             handle_specialty(model)
-          # when @@stat_types[:Advantage]
-          #   handle_advantage(model)
+          when @@stat_types[:Advantage]
+            handle_advantage(model)
           else
             client.emit_failure "Invalid type: #{stat_type} -- We got here past check_args, which is no bueno. Talk to a coder, for realz."
           end
         end
       end
 
-      def validate_numeric_main_value
-        @main_value = Integer(main_value)
-        nil
+      def validate_numeric_value(value)
+        Integer(value)
       rescue TypeError, ArgumentError
-        "Invalid Value: #{main_value}"
+        raise StandardError, "Invalid Value: #{value}"
+      end
+
+      def validate_numeric_main_value
+        @main_value = validate_numeric_value(main_value)
+        nil
+      rescue StandardError => e
+        e.message
+      end
+
+      def validate_numeric_optional_value
+        @optional_value = validate_numeric_value(optional_value)
+        nil
+      rescue StandardError => e
+        e.message
       end
 
       def validate_basic_args
         case stat_name.downcase
         when 'type'
-          return "Invalid Type: #{main_value}" unless WoD5e.character_types.key(main_value.downcase)
+          unless WoD5e.character_types.key(main_value.downcase)
+            return t('wod5e.validators.invalid_character_type', character_type: main_value.downcase)
+          end
 
           @main_value = main_value.downcase
+          nil
         else
           "Invalid Stat: #{stat_name}"
         end
@@ -99,6 +115,7 @@ module AresMUSH
 
       def validate_specialty_args
         @stat_name = StatValidators.validate_skill_name(stat_name)
+        nil
       rescue StandardError => e
         e.message
       end
@@ -127,16 +144,29 @@ module AresMUSH
             return e.message
           end
 
+          # Step 3, validate the main_value for either a number or a valid trait name
+          if validate_numeric_main_value.nil? # nil here means we have a valid numerical value.
+            validate_numeric_optional_value unless optional_value.nil?
+          else # got a string instead, make it a trait!
+            begin
+              @main_value = StatValidators.validate_trait_name(stat_name, main_value, model.wod5e_sheet.character_type)
+            rescue StandardError => e
+              return e.message
+            end
+
+            client.emit 'validating optional'
+            validated_optional_value = validate_numeric_optional_value
+            return validated_optional_value unless validated_optional_value.nil?
+          end
+
           # Step 3, put it all back together again.
           @stat_name = "#{stat_name} (#{note})" unless note.nil?
-
-          validated_main_value = validate_numeric_main_value
-          validated_main_value unless validated_main_value.nil?
+          nil
         end
       end
 
       def handle_attrib(model)
-        attrib = model.wod5e_sheet.attributes.select { |a| a.name == stat_name }.first
+        attrib = model.wod5e_sheet.attribs.to_a.find { |a| a.name == stat_name }
 
         if attrib
           attrib.update(value: main_value.to_i)
@@ -147,7 +177,7 @@ module AresMUSH
       end
 
       def handle_skill(model)
-        skill = model.wod5e_sheet.skills.select { |s| s.name == stat_name }.first
+        skill = model.wod5e_sheet.skills.to_a.find { |s| s.name == stat_name }
 
         if skill
           skill.update(value: main_value.to_i)
@@ -158,7 +188,7 @@ module AresMUSH
       end
 
       def handle_specialty(model)
-        skill = model.wod5e_sheet.skills.select { |s| s.name == stat_name }.first
+        skill = model.wod5e_sheet.skills.to_a.find { |s| s.name == stat_name }
 
         if skill
           new_specialties = skill.specialties || []
@@ -188,10 +218,10 @@ module AresMUSH
                             sheet: model.wod5e_sheet)
         end
 
-        output = if main.value.starts_with?('!')
-                   "#{model.wod5e_sheet.name} removed #{main_value} from #{stat_name} specialties."
+        output = if main_value.starts_with?('!')
+                   "#{model.name}'s #{stat_name} specialty removed from #{main_value}."
                  else
-                   "#{model.wod5e_sheet.name} added #{main_value} to #{stat_name} specialties."
+                   "#{model.name}'s #{stat_name} specialties added to #{main_value}."
                  end
 
         client.emit_success output
@@ -205,7 +235,68 @@ module AresMUSH
         end
       end
 
-      def handle_advantage(model) end
+      def handle_advantage(model)
+        advantage = model.wod5e_sheet.advantages.to_a.find { |adv| adv.name == stat_name }
+
+        if advantage # edit existing advantage
+          if main_value.is_a?(Integer) # Setting main value
+            if main_value.zero?
+              if advantage.children.count
+                client.emit_failure "#{model.name}'s #{stat_name} #{stat_type} has other stats attached: #{advantage.children.map(&:name).join(',')}" # rubocop:disable Layout/LineLength
+                return
+              else
+                advantage.delete
+                output = "#{model.name}'s #{stat_name} #{stat_type} removed."
+              end
+            else
+              advantage.update(value: main_value)
+              output = "#{model.name}'s #{stat_name} #{stat_type} set to #{main_value}"
+
+              if optional_value.is_a?(Integer) # add optional value
+                advantage.update(secondary_value: optional_value)
+                output << " / #{optional_value}"
+              end
+            end
+          else # Setting trait
+            trait = advantage.children.to_a.find { |c| c.name == main_value }
+            if trait # edit existing trait
+              if optional_value.zero?
+                trait.delete
+                output = "#{model.name}'s #{main_value} #{stat_type} on #{stat_name} removed."
+              else
+                trait.update(value: optional_value)
+                output = "#{model.name}'s #{main_value} #{stat_type} set to #{optional_value} on #{stat_name}"
+              end
+            else # create new trait on advantage
+              WoD5eAdvantage.create(name: main_value, value: optional_value, parent: advantage, sheet: model.wod5e_sheet)
+              output = "#{model.name}'s #{main_value} #{stat_type} set to #{optional_value} on #{stat_name}"
+            end
+          end
+        else # completely new advantage
+
+          if main_value.is_a?(Integer) # Setting main value # rubocop:disable Style/IfInsideElse
+            if main_value.zero?
+              # it has already been removed, just tell them we removed it again.
+              output = "#{model.name}'s #{stat_name} #{stat_type} removed."
+            else
+              advantage = WoD5eAdvantage.create(name: stat_name, value: main_value, sheet: model.wod5e_sheet)
+              output = "#{model.name}'s #{stat_name} #{stat_type} set to #{main_value}"
+
+              if optional_value.is_a?(Integer) # add optional value
+                client.emit advantage
+                advantage.update(secondary_value: optional_value)
+                output << " / #{optional_value}"
+              end
+            end
+          else # Setting trait
+            client.emit_failure "Unable to add #{main_value} on #{stat_name}: #{stat_name} does not exist!"
+            return
+          end
+        end
+
+        client.emit_failure 'Missing output on handle_advantage! Please see a coder.' if output.nil?
+        client.emit_success output
+      end
     end
   end
 end

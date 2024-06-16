@@ -44,13 +44,16 @@ module AresMUSH
           left_text = advantage.name
           left_text.prepend("#{' ' * (level * 2)}-") if level.positive?
 
-          right_text = advantage.value
-          right_text += " (#{advantage.secondary_value})" if advantage.secondary_value.positive?
+          right_text = advantage.value.to_s
+          right_text = "#{right_text} (#{advantage.secondary_value})" if advantage.secondary_value.positive?
+          # return "#{right_text}|#{advantage.secondary_value.positive?}"
 
-          text_out = format_stat_double(left_text, right_text)
+          text_out = format_stat_double(left_text, right_text, [2, right_text.length].max)
 
-          values << text_out
-          values.push(*format_advantages(advantage.children, level + 1)) unless advantage.children.empty?
+          # return "#{right_text}||#{text_out}||#{advantage.children}"
+
+          values.push(text_out)
+          values.push(*format_advantages(advantage.children.to_a, level + 1)) unless advantage.children.to_a.empty?
         end
         values
       end
@@ -99,14 +102,13 @@ module AresMUSH
         return unless advantages.count.positive?
 
         advantages_out = format_advantages(advantages)
+
         midpoint = (advantages_out.length / 2) + (advantages_out.length % 2)
 
         # We want to keep sub-objects in the same column as their parent.
         # If the first item in the second column is a sub-object (starts with a space),
         # push forward until we find a main-line item.
-        if midpoint.positive? && advantages_out[midpoint].starts_with?(' ')
-          midpoint += advantages_out[midpoint, advantages_out.length].index { |x| !x.starts_with?(' ') }
-        end
+        midpoint += 1 while midpoint.positive? && midpoint < advantages_out.length && advantages_out[midpoint].starts_with?(' ')
 
         ((0..(midpoint - 1)).map do |i|
           " #{advantages_out[i]} #{advantages_out[i + midpoint]} "

@@ -57,13 +57,13 @@ module AresMUSH
 
     attribute :name
     attribute :value, type: DataType::Integer
-    attribute :secondary_value, type: DataType::Integer
+    attribute :secondary_value, type: DataType::Integer, default: 0
 
-    reference :parent, :WoD5eAdvantage
+    reference :parent, 'AresMUSH::WoD5eAdvantage'
     reference :sheet, 'AresMUSH::Sheet'
 
     def children
-      WoD5eAdvantage.find(parent_id: id)
+      WoD5eAdvantage.find(parent_id: self.id)
     end
   end
 
