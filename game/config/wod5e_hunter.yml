@@ -399,4 +399,9 @@ wod5e:
         -
           name: Compromised
           value: 2
-        
+    
+    powers:
+    name: Edges and Perks
+    edges:
+    -
+      name: 

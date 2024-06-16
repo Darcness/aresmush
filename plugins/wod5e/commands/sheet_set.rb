@@ -154,7 +154,6 @@ module AresMUSH
               return e.message
             end
 
-            client.emit 'validating optional'
             validated_optional_value = validate_numeric_optional_value
             return validated_optional_value unless validated_optional_value.nil?
           end
@@ -241,7 +240,7 @@ module AresMUSH
         if advantage # edit existing advantage
           if main_value.is_a?(Integer) # Setting main value
             if main_value.zero?
-              if advantage.children.count
+              if advantage.children.count.positive?
                 client.emit_failure "#{model.name}'s #{stat_name} #{stat_type} has other stats attached: #{advantage.children.map(&:name).join(',')}" # rubocop:disable Layout/LineLength
                 return
               else
@@ -283,7 +282,6 @@ module AresMUSH
               output = "#{model.name}'s #{stat_name} #{stat_type} set to #{main_value}"
 
               if optional_value.is_a?(Integer) # add optional value
-                client.emit advantage
                 advantage.update(secondary_value: optional_value)
                 output << " / #{optional_value}"
               end
