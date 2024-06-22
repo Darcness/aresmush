@@ -4,13 +4,19 @@ module AresMUSH
   module WoD5e
     # Sheet Template
     class SheetTemplate < AresMUSH::ErbTemplateRenderer
-      attr_accessor :character, :sheet, :attr_dictionary, :skills_dictionary
+      attr_accessor :character, :sheet
+
+      mattr_accessor :attr_dictionary, :skills_dictionary, :type_data
+
+      # rubocop:disable Style/ClassVars
+      @@attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
+      @@skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
+      @@type_data = WoD5e.character_types.map { |_, v| [v, Global.read_config(PLUGIN_NAME, v)] }.to_h
+      # rubocop:enable Style/ClassVars
 
       def initialize(char)
         @character = char
         @sheet = @character.wod5e_sheet
-        @attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
-        @skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
         super "#{File.dirname(__FILE__)}/sheet.erb"
       end
 
@@ -46,11 +52,8 @@ module AresMUSH
 
           right_text = advantage.value.to_s
           right_text = "#{right_text} (#{advantage.secondary_value})" if advantage.secondary_value.positive?
-          # return "#{right_text}|#{advantage.secondary_value.positive?}"
 
           text_out = format_stat_double(left_text, right_text, [2, right_text.length].max)
-
-          # return "#{right_text}||#{text_out}||#{advantage.children}"
 
           values.push(text_out)
           values.push(*format_advantages(advantage.children.to_a, level + 1)) unless advantage.children.to_a.empty?
@@ -68,6 +71,31 @@ module AresMUSH
 
       def format_stat_line(left_text, right_text, left_size, right_size)
         "#{left(left_text, left_size, '.')} #{right(right_text, right_size)}"
+      end
+
+      def format_tree_view(item_list)
+        midpoint = (item_list.length / 2) + (item_list.length % 2)
+
+        # We want to keep sub-objects in the same column as their parent.
+        # If the first item in the second column is a sub-object (starts with a space),
+        # push forward until we find a main-line item.
+        midpoint += 1 while midpoint.positive? && midpoint < item_list.length && item_list[midpoint].starts_with?(' ')
+
+        ((0..(midpoint - 1)).map do |i|
+          " #{item_list[i]}  #{item_list[i + midpoint]} "
+        end).join('%R')
+      end
+
+      def format_edges(edges)
+        values = []
+        edges.each do |edge|
+          next unless edge.respond_to?(:name) &&
+                      edge.respond_to?(:perks)
+
+          values.push(left(edge.name, 37))
+          values.push(*edge.perks.map { |p| "  -#{p.name}" }) if edge.perks.count.positive?
+        end
+        values
       end
 
       def formatted_attributes_list
@@ -103,16 +131,31 @@ module AresMUSH
 
         advantages_out = format_advantages(advantages)
 
-        midpoint = (advantages_out.length / 2) + (advantages_out.length % 2)
+        format_tree_view(advantages_out)
+      end
 
-        # We want to keep sub-objects in the same column as their parent.
-        # If the first item in the second column is a sub-object (starts with a space),
-        # push forward until we find a main-line item.
-        midpoint += 1 while midpoint.positive? && midpoint < advantages_out.length && advantages_out[midpoint].starts_with?(' ')
+      def formatted_powers_header
+        return nil unless WoD5e.character_types.key(sheet.character_type)
 
-        ((0..(midpoint - 1)).map do |i|
-          " #{advantages_out[i]} #{advantages_out[i + midpoint]} "
-        end).join('%R')
+        out = center("%xn%xh[ #{type_data[sheet.character_type]['powers']['name']} ]%xn%x!", 78, '-')
+
+        "%x!#{out}%xn"
+      end
+
+      def formatted_powers_list
+        return nil unless WoD5e.character_types.key(sheet.character_type)
+
+        # return 'Hunter'.to_sym
+
+        case sheet.character_type
+        when WoD5e.character_types[:Hunter]
+          edges = sheet.edges.sort_by(:name, order: 'ALPHA')
+          return unless edges.count.positive?
+
+          edges_out = format_edges(edges)
+
+          format_tree_view(edges_out)
+        end
       end
     end
   end

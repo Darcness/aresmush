@@ -1,10 +1,12 @@
 %lh
  <%= left(character.name, 24) %>  Type: <%= sheet.character_type.capitalize %>
-<%= center('%xn%xh[ Attributes ]%xn', 78, '%x!-') %>%xn
+%x!<%= center('%xn%xh[ Attributes ]%xn%x!', 78, '-') %>%xn
  %xh<%= (attr_types_list.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
 <%= formatted_attributes_list  %>
-<%= center('%xn%xh[ Skills ]%xn', 78, '%x!-') %>%xn
+%x!<%= center('%xn%xh[ Skills ]%xn%x!', 78, '-') %>%xn
 <%= formatted_skills_list  %>
-<%= center('%xn%xh[ Advantages ]%xn', 78, '%x!-') %>%xn
+%x!<%= center('%xn%xh[ Advantages ]%xn%x!', 78, '-') %>%xn
 <%= formatted_advantages_list %>
+<%= formatted_powers_header %>
+<%= formatted_powers_list %>
 %lf

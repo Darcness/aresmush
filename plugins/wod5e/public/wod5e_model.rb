@@ -5,6 +5,7 @@ module AresMUSH
     include ObjectModel
 
     attribute :character_type
+    attribute :total_experience, type: DataType::Float, default: 0.0
 
     reference :character, 'AresMUSH::Character'
 
@@ -13,14 +14,12 @@ module AresMUSH
     collection :all_advantages, 'AresMUSH::WoD5eAdvantage'
     collection :xp_log, 'AresMUSH::WoD5eXPLog'
 
-    attribute :total_experience, type: DataType::Float, default: 0.0
-
-    def attributes2
-      WoD5eAttrib.find(sheet_id: id)
-    end
+    # Hunter stuff
+    collection :edges, 'AresMUSH::WoD5eEdge'
+    collection :perks, 'AresMUSH::WoD5ePerk'
 
     def advantages
-      WoD5eAdvantage.find(sheet_id: id).select { |a| a.parent_id.nil? }
+      all_advantages.select { |a| a.parent_id.nil? }
     end
   end
 
@@ -61,10 +60,8 @@ module AresMUSH
 
     reference :parent, 'AresMUSH::WoD5eAdvantage'
     reference :sheet, 'AresMUSH::Sheet'
-
-    def children
-      WoD5eAdvantage.find(parent_id: self.id)
-    end
+    
+    collection :children, 'AresMUSH::WoD5eAdvantage', 'parent'
   end
 
   # Sheet XP Expenditure

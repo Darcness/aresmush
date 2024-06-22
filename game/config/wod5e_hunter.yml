@@ -401,7 +401,217 @@ wod5e:
           value: 2
     
     powers:
-    name: Edges and Perks
-    edges:
-    -
-      name: 
+      name: Edges and Perks
+      edge_types:
+      -
+        type: Aptitudes
+        edges:
+        -
+          name: Improvised Gear
+          pool: "Intelligence + Craft, Technology, or Science, dpending on the type of tool or substance desired."
+          perks:
+          -
+            name: Frugal
+            description:
+          -
+            name: Mass Production
+            description:
+          -
+            name: Specialization
+            description:
+          -
+            name: Speed Crafting
+            description:
+        -
+          name: Global Access
+          pool: Intelligence + Technology
+          perks:
+          -
+            name: Watching Big Brother
+            description:
+          -
+            name: All-Access Pass
+            description:
+          -
+            name: Money Tap
+            description:
+          -
+            name: The Letter of the Law
+            description:
+        -
+          name: Drone Jockey
+          pool: "Wits + Technology for control of drone, Intelligence + Craft to repair or rebuild it."
+          perks:
+          -
+            name: Autonomous
+            description:
+          -
+            name: Variants
+            description:
+          -
+            name: Specialist Skill
+            description:
+          -
+            name: Armaments
+            description:
+          -
+            name: Payload
+            description:
+        -
+          name: Beast Whisperer
+          pool: Charisma + Animal Ken for commands and Composure + Animal Ken for training
+          perks:
+          -
+            name: Incorruptible
+            description:
+          -
+            name: Menagerie
+            description:
+          -
+            name: Complex Commands
+            description:
+          -
+            name: Incognito
+            description:
+      -
+        type: Assets
+        edges:
+        -
+          name: Arsenal
+          pool: Hunters who maintain their own arsenal test Intelligence + Craft. Those who rely on contacts test Manipulation + Streetwise instead.
+          description:
+          perks:
+          -
+            name: Team Requisition
+            description:
+          -
+            name: Special Features
+            description:
+          -
+            name: Exotics
+            description:
+          -
+            name: Untraceable
+            description:
+        -
+          name: Fleet
+          pool: Hunters who keep and maintain their own fleet test Intelligence + Technology.  Those who rely on contacts test Manipulation + Persusasion instead.
+          description:
+          perks:
+          -
+            name: Armor
+            description:
+          -
+            name: Performance
+            description:
+          -
+            name: Surveillance
+            description:
+          -
+            name: Untraceable
+            description:
+        -
+          name: Ordnance
+          pool: Hunters who build their own ordnance test Composure + Science.  Those who rely on contacts test Composure + Streetwise instead.
+          description:
+          perks:
+          -
+            name: Multiple Payloads
+            description:
+          -
+            name: Non-Lethal Munitions
+            description:
+          -
+            name: Exotics
+            description:
+          -
+            name: Disguised Delivery
+            description:
+        -
+          name: Library
+          pool: Resolve + Academics
+          description:
+          perks:
+          -
+            name: Where They Hide
+            description:
+          -
+            name: Who They Are
+            description:
+          -
+            name: How to Halt Them
+            description:
+          -
+            name: How to Harm Them
+            description:
+      -
+        type: Endowments
+        edges:
+        -
+          name: Sense the Unnatural
+          pool: "Wits + Occult or Science, depending on the nature of the Endowment"
+          description:
+          perks:
+          -
+            name: Creature Specialization
+            description:
+          -
+            name: Range
+            description:
+          -
+            name: Precision
+            description:
+          -
+            name: Handsfree
+            description:
+        -
+          name: Repel the Unnatural
+          pool: "Resolve + Occult or Science, depending on the nature of the Endowment"
+          description:
+          perks:
+          -
+            name: Ward
+            description:
+          -
+            name: Damage
+            description:
+          -
+            name: Creature Specialization
+            description:
+          -
+            name: Handsfree
+            description:
+        -
+          name: Thwart the Unnatural
+          pool: "Composure + Occult or Science, depending on the nature of the Endowment"
+          description:
+          perks:
+          -
+            name: Creature Specialization
+            description:
+          -
+            name: Ward
+            description:
+          -
+            name: Recognition
+            description:
+          -
+            name: Handsfree
+            description:
+        -
+          name: Artifact
+          pool: "Intelligence + Occult or Science, depending on the nature of the Endowment"
+          description:
+          perks:
+          -
+            name: Empower
+            description:
+          -
+            name: Attraction
+            description:
+          -
+            name: Detection
+            description:
+          -
+            name: Shield
+            description:
