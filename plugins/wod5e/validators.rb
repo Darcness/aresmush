@@ -77,6 +77,13 @@ module AresMUSH
 
         trait['name']
       end
+
+      # raises InvalidCharacterTemplateError, StandardError
+      def self.validate_edge_name(edge_name)
+        raise InvalidCharacterTemplateError, t('wod5e.validators.invalid_character_type', character_type:) unless WoD5e.character_types.key(character_type) # rubocop:disable Layout/LineLength
+
+        raise StandardError, 'Invalid Type Data for Hunter!' unless type_data[:Hunter]['powers'] && type_data[:Hunter]['powers']['edge_types'] # rubocop:disable Layout/LineLength
+      end
     end
 
     # Error for Invalid Character Templates (Hunter, Vampire, etc)

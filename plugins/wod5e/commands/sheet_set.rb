@@ -13,7 +13,9 @@ module AresMUSH
         Attribute: 'attribute',
         Skill: 'skill',
         Specialty: 'specialty',
-        Advantage: 'advantage'
+        Advantage: 'advantage',
+        Edge: 'edge',
+        Perk: 'perk'
       }
 
       def parse_args

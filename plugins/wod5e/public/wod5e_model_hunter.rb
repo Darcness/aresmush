@@ -1,20 +1,24 @@
+# frozen_string_literal: true
+
 module AresMUSH
-    class WoD5eEdge < Ohm::Model
-        include ObjectModel
+  # Edge Model for Hunters
+  class WoD5eEdge < Ohm::Model
+    include ObjectModel
 
-        attribute :name
+    attribute :name
 
-        reference :sheet, 'AresMUSH::Sheet'
+    reference :sheet, 'AresMUSH::Sheet'
 
-        collection :perks, 'AresMUSH::WoD5ePerk', 'edge'
-    end
+    collection :perks, 'AresMUSH::WoD5ePerk', 'edge'
+  end
 
-    class WoD5ePerk < Ohm::Model
-        include ObjectModel
+  # Perk Model for Hunters
+  class WoD5ePerk < Ohm::Model
+    include ObjectModel
 
-        attribute :name
+    attribute :name
 
-        reference :sheet, 'AresMUSH::Sheet'
-        reference :edge, 'AresMUSH::WoD5eEdge'
-    end
+    reference :sheet, 'AresMUSH::Sheet'
+    reference :edge, 'AresMUSH::WoD5eEdge'
+  end
 end
