@@ -17,3 +17,7 @@ en:
       invalid_trait: "Invalid Advantage for %{character_type}: %{advantage_name} / %{stat_name}"
       invalid_type_data: "Invalid Type Data for %{character_type}!"
       missing_advantage: "Found name for %{name} but could not find advantage in DB! Please let a coder know."
+    sheet_stat_added: "%{name}'s %{stat_name} %{stat_type} added."
+    sheet_stat_removed: "%{name}'s %{stat_name} %{stat_type} removed."
+    sheet_stat_child_added: "%{name}'s %{main_value} %{stat_type} added to %{stat_name}."
+    sheet_stat_child_removed: "%{name}'s %{main_value} %{stat_type} removed from %{stat_name}."

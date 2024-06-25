@@ -14,7 +14,7 @@ module AresMUSH
 
       # raises StandardError
       def self.validate_attribute_name(stat_name)
-        attr = attr_dictionary.values.flatten.select { |attr_data| attr_data['name'].start_with?(stat_name) }.first
+        attr = attr_dictionary.values.flatten.select { |attr_data| attr_data['name'].downcase.start_with?(stat_name.downcase) }.first
 
         raise StandardError, t('wod5e.validators.invalid_attribute', stat_name:) if attr.nil?
 
@@ -23,7 +23,7 @@ module AresMUSH
 
       # raises StandardError
       def self.validate_skill_name(stat_name)
-        skill = skills_dictionary.values.flatten.select { |skill_data| skill_data['name'].start_with?(stat_name) }.first
+        skill = skills_dictionary.values.flatten.select { |skill_data| skill_data['name'].downcase.start_with?(stat_name.downcase) }.first
 
         raise StandardError, t('wod5e.validators.invalid_skill', stat_name:) if skill.nil?
 
@@ -36,10 +36,10 @@ module AresMUSH
 
         advantage = catch(:advantage) do
           type_data[character_type]['advantages'].each do |adv|
-            found = adv['levels']&.find { |inner| inner['name'].start_with?(stat_name) }
+            found = adv['levels']&.find { |inner| inner['name'].downcase.start_with?(stat_name.downcase) }
             throw :advantage, found unless found.nil?
 
-            found = adv['flaws']&.find { |inner| inner['name'].start_with?(stat_name) }
+            found = adv['flaws']&.find { |inner| inner['name'].downcase.start_with?(stat_name.downcase) }
             throw :advantage, found unless found.nil?
           end
 
@@ -56,10 +56,10 @@ module AresMUSH
 
         advantage = catch(:advantage) do
           type_data[character_type]['advantages'].each do |adv|
-            found = adv['levels']&.find { |inner| inner['name'].start_with?(advantage_name) }
+            found = adv['levels']&.find { |inner| inner['name'].downcase.start_with?(advantage_name.downcase) }
             throw :advantage, adv unless found.nil?
 
-            found = adv['flaws']&.find { |inner| inner['name'].start_with?(advantage_name) }
+            found = adv['flaws']&.find { |inner| inner['name'].downcase.start_with?(advantage_name.downcase) }
             throw :advantage, adv unless found.nil?
           end
 
@@ -69,9 +69,11 @@ module AresMUSH
         raise StandardError, t('wod5e.validators.missing_advantage', stat_name: advantage_name) if advantage.nil?
 
         trait = advantage['traits'] &&
-                advantage['traits']['levels']&.find { |inner| inner['name'].start_with?(stat_name) }
+                advantage['traits']['levels']&.find { |inner| inner['name'].downcase.start_with?(stat_name.downcase) }
 
-        trait ||= advantage['traits'] && advantage['traits']['flaws']&.find { |inner| inner['name'].start_with?(stat_name) }
+        trait ||= advantage['traits'] && advantage['traits']['flaws']&.find do |inner|
+          inner['name'].downcase.start_with?(stat_name.downcase)
+        end
 
         raise StandardError, t('wod5e.validators.invalid_trait', advantage_name:, stat_name:, character_type: character_type.capitalize) if trait.nil? # rubocop:disable Layout/LineLength
 
@@ -91,7 +93,7 @@ module AresMUSH
             end
 
             found = edge_type['edges'].find do |inner|
-              inner['name'].start_with?(edge_name)
+              inner['name'].downcase.start_with?(edge_name.downcase)
             end
             throw :edge, found unless found.nil?
           end
@@ -114,7 +116,7 @@ module AresMUSH
       def self.validate_perk_name(perk_name, edge_name, character_type)
         edge = get_edge(edge_name, character_type)
 
-        perk = edge['perks'].find { |p| p['name'].start_with?(perk_name) }
+        perk = edge['perks'].find { |p| p['name'].downcase.start_with?(perk_name.downcase) }
         raise StandardError, t('wod5e.validators.invalid_perk', edge_name: edge['name'], perk_name:) if perk.nil?
 
         perk['name']

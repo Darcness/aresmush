@@ -93,7 +93,7 @@ module AresMUSH
                       edge.respond_to?(:perks)
 
           values.push(left(edge.name, 37))
-          values.push(*edge.perks.map { |p| "  -#{p.name}" }) if edge.perks.count.positive?
+          values.push(*edge.perks.map { |p| left("  -#{p.name}", 37) }) if edge.perks.count.positive?
         end
         values
       end

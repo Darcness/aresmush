@@ -65,6 +65,10 @@ module AresMUSH
             handle_specialty(model)
           when @@stat_types[:Advantage]
             handle_advantage(model)
+          when @@stat_types[:Edge]
+            handle_edge(model)
+          when @@stat_types[:Perk]
+            handle_perk(model)
           else
             client.emit_failure "Invalid type: #{stat_type} -- We got here past check_args, which is no bueno. Talk to a coder, for realz."
           end
@@ -207,7 +211,7 @@ module AresMUSH
             return e.message
           end
 
-          return "Invalid Value: #{optional_value} -- Possible types: 0, 1" unless optional_value == '0' || optional_value == '1'
+          return "Invalid Value: #{optional_value} -- Possible values: 0, 1" unless optional_value == '0' || optional_value == '1'
 
           nil
         end
@@ -294,7 +298,7 @@ module AresMUSH
                 return
               else
                 advantage.delete
-                output = "#{model.name}'s #{stat_name} #{stat_type} removed."
+                output = t('wod5e.sheet_stat_removed', name: model.name, stat_name:, stat_type:)
               end
             else
               advantage.update(value: main_value)
@@ -343,6 +347,52 @@ module AresMUSH
 
         client.emit_failure 'Missing output on handle_advantage! Please see a coder.' if output.nil?
         client.emit_success output
+      end
+
+      def handle_edge(model)
+        edge = model.wod5e_sheet.edges.to_a.find { |adv| adv.name == stat_name }
+
+        if main_value == '1' # Adding
+          if edge
+            client.emit_failure "#{model.name} already has #{edge.name} edge! Set to 0 to remove."
+          else
+            WoD5eEdge.create(name: stat_name, sheet: model.wod5e_sheet)
+            client.emit_success t('wod5e.sheet_stat_added', name: model.name, stat_name:, stat_type:)
+          end
+        else # Removing
+          if edge # rubocop:disable Style/IfInsideElse
+            edge.delete
+            client.emit_success t('wod5e.sheet_stat_removed', name: model.name, stat_name:, stat_type:) # Removing
+          else
+            client.emit_failure "#{model.name} does not have #{stat_name} to remove."
+          end
+        end
+      end
+
+      def handle_perk(model)
+        edge = model.wod5e_sheet.edges.to_a.find { |adv| adv.name == stat_name }
+        perk = edge.perks.to_a.find { |p| p.name == main_value }
+
+        unless edge
+          client.emit_failure "#{model.name} does not have #{stat_name} #{stat_type}!"
+          return
+        end
+
+        if optional_value == '1' # Adding
+          if perk
+            client.emit_failure "#{model.name} already has #{perk.name} on #{edge.name}! Set to 0 to remove."
+          else
+            WoD5ePerk.create(name: main_value, edge:, sheet: model.wod5e_sheet)
+            client.emit_success t('wod5e.sheet_stat_child_added', name: model.name, stat_name:, stat_type:, main_value:)
+          end
+        else # Removing
+          if perk # Removing # rubocop:disable Style/IfInsideElse
+            perk.delete
+            client.emit_success t('wod5e.sheet_stat_child_removed', name: model.name, stat_name:, stat_type:, main_value:)
+          else
+            client.emit_failure "#{model.name} does not have #{main_value} #{stat_type} on #{stat_name}! Set to 1 to add."
+          end
+        end
       end
     end
   end
