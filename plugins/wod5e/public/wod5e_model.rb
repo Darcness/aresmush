@@ -60,7 +60,7 @@ module AresMUSH
 
     reference :parent, 'AresMUSH::WoD5eAdvantage'
     reference :sheet, 'AresMUSH::Sheet'
-    
+
     collection :children, 'AresMUSH::WoD5eAdvantage', 'parent'
   end
 

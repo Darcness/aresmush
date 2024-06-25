@@ -135,18 +135,14 @@ module AresMUSH
       end
 
       def formatted_powers_header
-        return nil unless WoD5e.character_types.key(sheet.character_type)
+        header = WoD5e.character_types.key(sheet.character_type) && type_data.dig(sheet.character_type, 'powers', 'name')
 
-        out = center("%xn%xh[ #{type_data[sheet.character_type]['powers']['name']} ]%xn%x!", 78, '-')
+        out = center("%xn%xh[ #{header} ]%xn%x!", 78, '-')
 
         "%x!#{out}%xn"
       end
 
       def formatted_powers_list
-        return nil unless WoD5e.character_types.key(sheet.character_type)
-
-        # return 'Hunter'.to_sym
-
         case sheet.character_type
         when WoD5e.character_types[:Hunter]
           edges = sheet.edges.sort_by(:name, order: 'ALPHA')

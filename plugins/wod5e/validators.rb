@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module AresMUSH
-  module WoD5e
+  module WoD5e # :nodoc:
     # Validate Stats for sheet names
     class StatValidators
       mattr_accessor :attr_dictionary, :skills_dictionary, :type_data
@@ -78,11 +78,46 @@ module AresMUSH
         trait['name']
       end
 
-      # raises InvalidCharacterTemplateError, StandardError
-      def self.validate_edge_name(edge_name)
-        raise InvalidCharacterTemplateError, t('wod5e.validators.invalid_character_type', character_type:) unless WoD5e.character_types.key(character_type) # rubocop:disable Layout/LineLength
+      private_class_method def self.get_edge(edge_name, character_type)
+        raise InvalidCharacterTemplateError, t('wod5e.validators.invalid_character_type', character_type:) unless WoD5e.character_types[:Hunter] == character_type.downcase # rubocop:disable Layout/LineLength
 
-        raise StandardError, 'Invalid Type Data for Hunter!' unless type_data[:Hunter]['powers'] && type_data[:Hunter]['powers']['edge_types'] # rubocop:disable Layout/LineLength
+        raise StandardError, t('wod5e.validators.invalid_type_data', character_type: :Hunter.to_s) unless type_data.dig(character_type, 'powers', 'edge_types') # rubocop:disable Layout/LineLength
+
+        edge = catch(:edge) do
+          type_data[character_type]['powers']['edge_types'].each do |edge_type|
+            unless edge_type['edges']&.count&.positive?
+              raise StandardError,
+                    t('wod5e.validators.invalid_edge_type', edge_type: edge_type['type'])
+            end
+
+            found = edge_type['edges'].find do |inner|
+              inner['name'].start_with?(edge_name)
+            end
+            throw :edge, found unless found.nil?
+          end
+
+          throw :edge, nil
+        end
+
+        raise StandardError, t('wod5e.validators.invalid_edge', edge_name:) if edge.nil?
+
+        edge
+      end
+
+      # raises InvalidCharacterTemplateError, StandardError
+      def self.validate_edge_name(edge_name, character_type)
+        edge = get_edge(edge_name, character_type)
+        edge['name']
+      end
+
+      # raises InvalidCharacterTemplateError, StandardError
+      def self.validate_perk_name(perk_name, edge_name, character_type)
+        edge = get_edge(edge_name, character_type)
+
+        perk = edge['perks'].find { |p| p['name'].start_with?(perk_name) }
+        raise StandardError, t('wod5e.validators.invalid_perk', edge_name: edge['name'], perk_name:) if perk.nil?
+
+        perk['name']
       end
     end
 

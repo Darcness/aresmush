@@ -39,6 +39,10 @@ module AresMUSH
           validate_specialty_args
         when @@stat_types[:Advantage]
           validate_advantage_args
+        when @@stat_types[:Edge]
+          validate_edge_args
+        when @@stat_types[:Perk]
+          validate_perk_args
         else
           "Invalid type: #{stat_type}"
         end
@@ -162,6 +166,49 @@ module AresMUSH
 
           # Step 3, put it all back together again.
           @stat_name = "#{stat_name} (#{note})" unless note.nil?
+          nil
+        end
+      end
+
+      def validate_edge_args
+        ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+          if model.wod5e_sheet.character_type.nil? || model.wod5e_sheet.character_type.empty?
+            "#{target_name} must have a type specified first"
+          elsif !WoD5e.character_types.key(model.wod5e_sheet.character_type)
+            model.wod5e_sheet.update(:character_type, '')
+            "#{target_name} has an invalid type! Resetting...."
+          end
+
+          begin
+            @stat_name = StatValidators.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
+          rescue StandardError => e
+            return e.message
+          end
+
+          return "Invalid Value: #{main_value} -- Possible types: 0, 1" unless main_value == '0' || main_value == '1'
+
+          nil
+        end
+      end
+
+      def validate_perk_args
+        ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+          if model.wod5e_sheet.character_type.nil? || model.wod5e_sheet.character_type.empty?
+            "#{target_name} must have a type specified first"
+          elsif !WoD5e.character_types.key(model.wod5e_sheet.character_type)
+            model.wod5e_sheet.update(:character_type, '')
+            "#{target_name} has an invalid type! Resetting...."
+          end
+
+          begin
+            @stat_name = StatValidators.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
+            @main_value = StatValidators.validate_perk_name(main_value, stat_name, model.wod5e_sheet.character_type)
+          rescue StandardError => e
+            return e.message
+          end
+
+          return "Invalid Value: #{optional_value} -- Possible types: 0, 1" unless optional_value == '0' || optional_value == '1'
+
           nil
         end
       end
