@@ -4,614 +4,486 @@ wod5e:
       advantages: 7
       flaws: 2
       edges:
-      - 
-        name: Two Edges
-        requirements:
-        -
-          type: Edge
-          amount: 2
-      - 
-        name: One Edge and Two Perks
-        requirements:
-        -
-          type: Edge
-          amount: 1
-        -
-          type: Perk
-          amount: 2
-    
+        - name: Two Edges
+          requirements:
+            - type: Edge
+              amount: 2
+        - name: One Edge and Two Perks
+          requirements:
+            - type: Edge
+              amount: 1
+            - type: Perk
+              amount: 2
+
     advantages:
-    -
-      name: Linguistics
-      multiple: true
-      secondary: false
-      levels:
-      - 
-        name: Language
-        value: 1
-      flaws:
-      -
-        name: Illiterate
-        value: 2
-    -
-      name: Looks
-      multiple: false
-      secondary: false
-      levels:
-      -
-        name: Beautiful
-        value: 2
-      -
-        name: Stunning
-        value: 4
-      flaws:
-      -
-        name: Ugly
-        value: 1
-      -
-        name: Repulsive
-        value: 2
-    -
-      name: Nutritionist
-      multiple: false
-      secondary: false
-      levels:
-      -
-        name: Solo Cooking
-        value: 1
-      -
-        name: Cell Chef
-        value: 2
-      flaws:
-    -
-      name: Psychological Traits
-      multiple: true
-      secondary: false
-      levels:
-      flaws:
-      -
-        name: Living on the Edge
-        value: 2
-      -
-        name: Weak-Willed
-        value: 2
-    -
-      name: Substance Abuse
-      multiple: false
-      secondary: false
-      levels:
-      flaws:
-      -
-        name: Addiction
-        value: 1
-      -
-        name: Severe Addiction
-        value: 2
-    -
-      name: Supernatural Situations
-      multiple: false
-      secondary: false
-      levels:
-      -
-        name: Unseemly Aura
-        value: 2
-      flaws:
-      -
-        name: Stigmata
-        value: 1
-      -
-        name: Crone's Curse
-        value: 2
-    -
-      name: Allies
-      multiple: true
-      secondary: true
-      levels:
-      -
-        name: Allies
-        value: 1
-      -
-        name: Allies
-        value: 2
-      -
-        name: Allies
-        value: 3
-      -
-        name: Allies
-        value: 4
-      -
-        name: Allies
-        value: 5
-      flaws:
-      - 
-        name: Enemy
-        value: 1
-      - 
-        name: Enemy
-        value: 2
-      - 
-        name: Enemy
-        value: 3
-    -
-      name: Contacts
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Contacts
-        value: 1
-      -
-        name: Contacts
-        value: 2
-      -
-        name: Contacts
-        value: 3
-      flaws:
-    -
-      name: Fame
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Fame
-        value: 1
-      -
-        name: Fame
-        value: 2
-      -
-        name: Fame
-        value: 3
-      -
-        name: Fame
-        value: 4
-      -
-        name: Fame
-        value: 5
-      flaws:
-      -
-        name: Infamy
-        value: 2
-      -
-        name: Dark Secret
-        value: 1
-      -
-        name: Infamous Partner
-        value: 1
-    -
-      name: Influence
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Influence
-        value: 1
-      -
-        name: Influence
-        value: 2
-      -
-        name: Influence
-        value: 3
-      -
-        name: Influence
-        value: 4
-      -
-        name: Influence
-        value: 5
-      flaws:
-      -
-        name: Despised
-        value: 2
-      -
-        name: Disliked
-        value: 1
-    -
-      name: Mask
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Mask
-        value: 1
-      -
-        name: Mask
-        value: 2
-      flaws:
-      -
-        name: Person of Interest
-        value: 2
-      -
-        name: Serial Error
-        value: 1
-    -
-      name: Zeroed
-      multiple: false
-      secondary: false
-      levels:
-      -
-        name: Zeroed
-        value: 1
-    -
-      name: Cobbler
-      multiple: false
-      secondary: false
-      levels:
-      -
-        name: Cobbler
-        value: 1
-    -
-      name: Mentor
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Mentor
-        value: 1
-      -
-        name: Mentor
-        value: 2
-      -
-        name: Mentor
-        value: 3
-      -
-        name: Mentor
-        value: 4
-      -
-        name: Mentor
-        value: 5
-      flaws:
-      - 
-        name: Adversary
-        value: 1
-      - 
-        name: Adversary
-        value: 2
-      - 
-        name: Adversary
-        value: 3
-    -
-      name: Resources
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Resources
-        value: 1
-      -
-        name: Resources
-        value: 2
-      -
-        name: Resources
-        value: 3
-      -
-        name: Resources
-        value: 4
-      -
-        name: Resources
-        value: 5
-      flaws:
-      -
-        name: Destitute
-        value: 1
-    -
-      name: Retainers
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Retainers
-        value: 1
-      -
-        name: Retainers
-        value: 2
-      -
-        name: Retainers
-        value: 3
-      -
-        name: Retainers
-        value: 4
-      -
-        name: Retainers
-        value: 5
-      flaws:
-      -
-        name: Stalkers
-        value: 1
-    -
-      name: Status
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Status
-        value: 1
-      -
-        name: Status
-        value: 2
-      -
-        name: Status
-        value: 3
-      -
-        name: Status
-        value: 4
-      -
-        name: Status
-        value: 5
-      flaws:
-      -
-        name: Suspect
-        value: 1
-      -
-        name: Shunned
-        value: 2
-    -
-      name: Safe House
-      multiple: true
-      secondary: false
-      levels:
-      -
-        name: Safe House
-        value: 1
-      -
-        name: Safe House
-        value: 2
-      -
-        name: Safe House
-        value: 3
-      flaws:
-      -
-        name: No Safe House
-        value: 1
-      -
-        name: Compromised
-        value: 2
-      traits:
+      - name: Linguistics
         multiple: true
         secondary: false
         levels:
-        -
-          name: Hidden Armory
-          value: 1
-        -
-          name: Panic Room
-          value: 1
-        -
-          name: Watchmen
-          value: 1
-        -
-          name: Laboratory
-          value: 1
-        -
-          name: Luxury
-          value: 1
-        -
-          name: Security System
-          value: 1
-        -
-          name: Surgery
-          value: 1
+          - name: Language
+            value: 1
         flaws:
-        -
-          name: Creepy
-          value: 1
-        -
-          name: Haunted
-          value: 1
-        -
-          name: Compromised
-          value: 2
-    
+          - name: Illiterate
+            value: 2
+      - name: Looks
+        multiple: false
+        secondary: false
+        levels:
+          - name: Beautiful
+            value: 2
+          - name: Stunning
+            value: 4
+        flaws:
+          - name: Ugly
+            value: 1
+          - name: Repulsive
+            value: 2
+      - name: Nutritionist
+        multiple: false
+        secondary: false
+        levels:
+          - name: Solo Cooking
+            value: 1
+          - name: Cell Chef
+            value: 2
+        flaws:
+      - name: Psychological Traits
+        multiple: true
+        secondary: false
+        levels:
+        flaws:
+          - name: Living on the Edge
+            value: 2
+          - name: Weak-Willed
+            value: 2
+      - name: Substance Abuse
+        multiple: false
+        secondary: false
+        levels:
+        flaws:
+          - name: Addiction
+            value: 1
+          - name: Severe Addiction
+            value: 2
+      - name: Supernatural Situations
+        multiple: false
+        secondary: false
+        levels:
+          - name: Unseemly Aura
+            value: 2
+        flaws:
+          - name: Stigmata
+            value: 1
+          - name: Crone's Curse
+            value: 2
+      - name: Allies
+        multiple: true
+        secondary: true
+        levels:
+          - name: Allies
+            value: 1
+          - name: Allies
+            value: 2
+          - name: Allies
+            value: 3
+          - name: Allies
+            value: 4
+          - name: Allies
+            value: 5
+        flaws:
+          - name: Enemy
+            value: 1
+          - name: Enemy
+            value: 2
+          - name: Enemy
+            value: 3
+      - name: Contacts
+        multiple: true
+        secondary: false
+        levels:
+          - name: Contacts
+            value: 1
+          - name: Contacts
+            value: 2
+          - name: Contacts
+            value: 3
+        flaws:
+      - name: Fame
+        multiple: true
+        secondary: false
+        levels:
+          - name: Fame
+            value: 1
+          - name: Fame
+            value: 2
+          - name: Fame
+            value: 3
+          - name: Fame
+            value: 4
+          - name: Fame
+            value: 5
+        flaws:
+          - name: Infamy
+            value: 2
+          - name: Dark Secret
+            value: 1
+          - name: Infamous Partner
+            value: 1
+      - name: Influence
+        multiple: true
+        secondary: false
+        levels:
+          - name: Influence
+            value: 1
+          - name: Influence
+            value: 2
+          - name: Influence
+            value: 3
+          - name: Influence
+            value: 4
+          - name: Influence
+            value: 5
+        flaws:
+          - name: Despised
+            value: 2
+          - name: Disliked
+            value: 1
+      - name: Mask
+        multiple: true
+        secondary: false
+        levels:
+          - name: Mask
+            value: 1
+          - name: Mask
+            value: 2
+        flaws:
+          - name: Person of Interest
+            value: 2
+          - name: Serial Error
+            value: 1
+      - name: Zeroed
+        multiple: false
+        secondary: false
+        levels:
+          - name: Zeroed
+            value: 1
+      - name: Cobbler
+        multiple: false
+        secondary: false
+        levels:
+          - name: Cobbler
+            value: 1
+      - name: Mentor
+        multiple: true
+        secondary: false
+        levels:
+          - name: Mentor
+            value: 1
+          - name: Mentor
+            value: 2
+          - name: Mentor
+            value: 3
+          - name: Mentor
+            value: 4
+          - name: Mentor
+            value: 5
+        flaws:
+          - name: Adversary
+            value: 1
+          - name: Adversary
+            value: 2
+          - name: Adversary
+            value: 3
+      - name: Resources
+        multiple: true
+        secondary: false
+        levels:
+          - name: Resources
+            value: 1
+          - name: Resources
+            value: 2
+          - name: Resources
+            value: 3
+          - name: Resources
+            value: 4
+          - name: Resources
+            value: 5
+        flaws:
+          - name: Destitute
+            value: 1
+      - name: Retainers
+        multiple: true
+        secondary: false
+        levels:
+          - name: Retainers
+            value: 1
+          - name: Retainers
+            value: 2
+          - name: Retainers
+            value: 3
+          - name: Retainers
+            value: 4
+          - name: Retainers
+            value: 5
+        flaws:
+          - name: Stalkers
+            value: 1
+      - name: Status
+        multiple: true
+        secondary: false
+        levels:
+          - name: Status
+            value: 1
+          - name: Status
+            value: 2
+          - name: Status
+            value: 3
+          - name: Status
+            value: 4
+          - name: Status
+            value: 5
+        flaws:
+          - name: Suspect
+            value: 1
+          - name: Shunned
+            value: 2
+      - name: Safe House
+        multiple: true
+        secondary: false
+        levels:
+          - name: Safe House
+            value: 1
+          - name: Safe House
+            value: 2
+          - name: Safe House
+            value: 3
+        flaws:
+          - name: No Safe House
+            value: 1
+          - name: Compromised
+            value: 2
+        traits:
+          multiple: true
+          secondary: false
+          levels:
+            - name: Hidden Armory
+              value: 1
+            - name: Panic Room
+              value: 1
+            - name: Watchmen
+              value: 1
+            - name: Laboratory
+              value: 1
+            - name: Luxury
+              value: 1
+            - name: Security System
+              value: 1
+            - name: Surgery
+              value: 1
+          flaws:
+            - name: Creepy
+              value: 1
+            - name: Haunted
+              value: 1
+            - name: Compromised
+              value: 2
+
     powers:
       name: Edges and Perks
       edge_types:
+        - type: Aptitudes
+          edges:
+            - name: Improvised Gear
+              pool: "Intelligence + Craft, Technology, or Science, dpending on the type of tool or substance desired."
+              perks:
+                - name: Frugal
+                  description:
+                - name: Mass Production
+                  description:
+                - name: Specialization
+                  description:
+                - name: Speed Crafting
+                  description:
+            - name: Global Access
+              pool: Intelligence + Technology
+              perks:
+                - name: Watching Big Brother
+                  description:
+                - name: All-Access Pass
+                  description:
+                - name: Money Tap
+                  description:
+                - name: The Letter of the Law
+                  description:
+            - name: Drone Jockey
+              pool: "Wits + Technology for control of drone, Intelligence + Craft to repair or rebuild it."
+              perks:
+                - name: Autonomous
+                  description:
+                - name: Variants
+                  description:
+                - name: Specialist Skill
+                  description:
+                - name: Armaments
+                  description:
+                - name: Payload
+                  description:
+            - name: Beast Whisperer
+              pool: Charisma + Animal Ken for commands and Composure + Animal Ken for training
+              perks:
+                - name: Incorruptible
+                  description:
+                - name: Menagerie
+                  description:
+                - name: Complex Commands
+                  description:
+                - name: Incognito
+                  description:
+        - type: Assets
+          edges:
+            - name: Arsenal
+              pool: Hunters who maintain their own arsenal test Intelligence + Craft. Those who rely on contacts test Manipulation + Streetwise instead.
+              description:
+              perks:
+                - name: Team Requisition
+                  description:
+                - name: Special Features
+                  description:
+                - name: Exotics
+                  description:
+                - name: Untraceable
+                  description:
+            - name: Fleet
+              pool: Hunters who keep and maintain their own fleet test Intelligence + Technology.  Those who rely on contacts test Manipulation + Persusasion instead.
+              description:
+              perks:
+                - name: Armor
+                  description:
+                - name: Performance
+                  description:
+                - name: Surveillance
+                  description:
+                - name: Untraceable
+                  description:
+            - name: Ordnance
+              pool: Hunters who build their own ordnance test Composure + Science.  Those who rely on contacts test Composure + Streetwise instead.
+              description:
+              perks:
+                - name: Multiple Payloads
+                  description:
+                - name: Non-Lethal Munitions
+                  description:
+                - name: Exotics
+                  description:
+                - name: Disguised Delivery
+                  description:
+            - name: Library
+              pool: Resolve + Academics
+              description:
+              perks:
+                - name: Where They Hide
+                  description:
+                - name: Who They Are
+                  description:
+                - name: How to Halt Them
+                  description:
+                - name: How to Harm Them
+                  description:
+        - type: Endowments
+          edges:
+            - name: Sense the Unnatural
+              pool: "Wits + Occult or Science, depending on the nature of the Endowment"
+              description:
+              perks:
+                - name: Creature Specialization
+                  description:
+                - name: Range
+                  description:
+                - name: Precision
+                  description:
+                - name: Handsfree
+                  description:
+            - name: Repel the Unnatural
+              pool: "Resolve + Occult or Science, depending on the nature of the Endowment"
+              description:
+              perks:
+                - name: Ward
+                  description:
+                - name: Damage
+                  description:
+                - name: Creature Specialization
+                  description:
+                - name: Handsfree
+                  description:
+            - name: Thwart the Unnatural
+              pool: "Composure + Occult or Science, depending on the nature of the Endowment"
+              description:
+              perks:
+                - name: Creature Specialization
+                  description:
+                - name: Ward
+                  description:
+                - name: Recognition
+                  description:
+                - name: Handsfree
+                  description:
+            - name: Artifact
+              pool: "Intelligence + Occult or Science, depending on the nature of the Endowment"
+              description:
+              perks:
+                - name: Empower
+                  description:
+                - name: Attraction
+                  description:
+                - name: Detection
+                  description:
+                - name: Shield
+                  description:
+
+    creeds:
       -
-        type: Aptitudes
-        edges:
-        -
-          name: Improvised Gear
-          pool: "Intelligence + Craft, Technology, or Science, dpending on the type of tool or substance desired."
-          perks:
-          -
-            name: Frugal
-            description:
-          -
-            name: Mass Production
-            description:
-          -
-            name: Specialization
-            description:
-          -
-            name: Speed Crafting
-            description:
-        -
-          name: Global Access
-          pool: Intelligence + Technology
-          perks:
-          -
-            name: Watching Big Brother
-            description:
-          -
-            name: All-Access Pass
-            description:
-          -
-            name: Money Tap
-            description:
-          -
-            name: The Letter of the Law
-            description:
-        -
-          name: Drone Jockey
-          pool: "Wits + Technology for control of drone, Intelligence + Craft to repair or rebuild it."
-          perks:
-          -
-            name: Autonomous
-            description:
-          -
-            name: Variants
-            description:
-          -
-            name: Specialist Skill
-            description:
-          -
-            name: Armaments
-            description:
-          -
-            name: Payload
-            description:
-        -
-          name: Beast Whisperer
-          pool: Charisma + Animal Ken for commands and Composure + Animal Ken for training
-          perks:
-          -
-            name: Incorruptible
-            description:
-          -
-            name: Menagerie
-            description:
-          -
-            name: Complex Commands
-            description:
-          -
-            name: Incognito
-            description:
+        name: Entreprenurial
+        field: Building, inventing, augmenting, or repairing while on the Hunters
       -
-        type: Assets
-        edges:
-        -
-          name: Arsenal
-          pool: Hunters who maintain their own arsenal test Intelligence + Craft. Those who rely on contacts test Manipulation + Streetwise instead.
-          description:
-          perks:
-          -
-            name: Team Requisition
-            description:
-          -
-            name: Special Features
-            description:
-          -
-            name: Exotics
-            description:
-          -
-            name: Untraceable
-            description:
-        -
-          name: Fleet
-          pool: Hunters who keep and maintain their own fleet test Intelligence + Technology.  Those who rely on contacts test Manipulation + Persusasion instead.
-          description:
-          perks:
-          -
-            name: Armor
-            description:
-          -
-            name: Performance
-            description:
-          -
-            name: Surveillance
-            description:
-          -
-            name: Untraceable
-            description:
-        -
-          name: Ordnance
-          pool: Hunters who build their own ordnance test Composure + Science.  Those who rely on contacts test Composure + Streetwise instead.
-          description:
-          perks:
-          -
-            name: Multiple Payloads
-            description:
-          -
-            name: Non-Lethal Munitions
-            description:
-          -
-            name: Exotics
-            description:
-          -
-            name: Disguised Delivery
-            description:
-        -
-          name: Library
-          pool: Resolve + Academics
-          description:
-          perks:
-          -
-            name: Where They Hide
-            description:
-          -
-            name: Who They Are
-            description:
-          -
-            name: How to Halt Them
-            description:
-          -
-            name: How to Harm Them
-            description:
+        name: Faithful
+        field: Any direct conflict (physical, social, or mental) with the supernatural while on the Hunt.
       -
-        type: Endowments
-        edges:
-        -
-          name: Sense the Unnatural
-          pool: "Wits + Occult or Science, depending on the nature of the Endowment"
-          description:
-          perks:
-          -
-            name: Creature Specialization
-            description:
-          -
-            name: Range
-            description:
-          -
-            name: Precision
-            description:
-          -
-            name: Handsfree
-            description:
-        -
-          name: Repel the Unnatural
-          pool: "Resolve + Occult or Science, depending on the nature of the Endowment"
-          description:
-          perks:
-          -
-            name: Ward
-            description:
-          -
-            name: Damage
-            description:
-          -
-            name: Creature Specialization
-            description:
-          -
-            name: Handsfree
-            description:
-        -
-          name: Thwart the Unnatural
-          pool: "Composure + Occult or Science, depending on the nature of the Endowment"
-          description:
-          perks:
-          -
-            name: Creature Specialization
-            description:
-          -
-            name: Ward
-            description:
-          -
-            name: Recognition
-            description:
-          -
-            name: Handsfree
-            description:
-        -
-          name: Artifact
-          pool: "Intelligence + Occult or Science, depending on the nature of the Endowment"
-          description:
-          perks:
-          -
-            name: Empower
-            description:
-          -
-            name: Attraction
-            description:
-          -
-            name: Detection
-            description:
-          -
-            name: Shield
-            description:
+        name: Inquisitive
+        field: Gaining information while on the Hunt, such as research, breaking and entering, and interrogation.
+      -
+        name: Martial
+        field: Physical contact while on the Hunt (which need not be with the quary itself, or even the supernatural).
+      -
+        name: Underground
+        field: Stealth and subterfuge in service of the Hunt.
+    
+    drives:
+      -
+        name: Curiosity
+        description:
+        redemption: The cell must uncover new information about their quarry.
+      -
+        name: Vengeance
+        description:
+        redemption: The cell must hurt their quary (or a similar creature) either directly or by proxy.
+      -
+        name: Oath
+        description:
+        redemption: The cell must help the Hunter to actively uphold their oath or bring it closer to fulfillment
+      -
+        name: Greed
+        description:
+        redemption: Acquisition of resources from their quarry, or from creatures like it.
+      -
+        name: Pride
+        description:
+        redemption: Besting the quary in some type of challenge, directly or indirectly.
+      -
+        name: Envy
+        description:
+        redemption: Get into the quarry's good graces or procure samples of the source of their power.
+      -
+        name: Atonement
+        description:
+        redemption: The cell must protect someone from the quary (or a similar creature), either directly or by proxy, by standing in harm's way, taking a proverbial bullet for them.  Alternatively, the Hunter can redeem themselves by doing the same for a cellie.
+    

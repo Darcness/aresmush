@@ -121,6 +121,30 @@ module AresMUSH
 
         perk['name']
       end
+
+      def self.validate_creed_name(creed_name, character_type)
+        raise InvalidCharacterTemplateError, t('wod5e.validators.invalid_character_type', character_type:) unless WoD5e.character_types[:Hunter] == character_type.downcase # rubocop:disable Layout/LineLength
+
+        raise StandardError, t('wod5e.validators.invalid_type_data', character_type: :Hunter.to_s) unless type_data.dig(character_type, 'creeds') # rubocop:disable Layout/LineLength
+
+        creed = type_data[character_type]['creeds'].find { |c| c['name'].downcase.start_with?(creed_name.downcase) }
+
+        raise StandardError, t('wod5e.validators.invalid_creed', creed_name:) if creed.nil?
+
+        creed['name']
+      end
+
+      def self.validate_drive_name(drive_name, character_type)
+        raise InvalidCharacterTemplateError, t('wod5e.validators.invalid_character_type', character_type:) unless WoD5e.character_types[:Hunter] == character_type.downcase # rubocop:disable Layout/LineLength
+
+        raise StandardError, t('wod5e.validators.invalid_type_data', character_type: :Hunter.to_s) unless type_data.dig(character_type, 'drives') # rubocop:disable Layout/LineLength
+
+        drive = type_data[character_type]['drives'].find { |c| c['name'].downcase.start_with?(drive_name.downcase) }
+
+        raise StandardError, t('wod5e.validators.invalid_drive', drive_name:) if drive.nil?
+
+        drive['name']
+      end
     end
 
     # Error for Invalid Character Templates (Hunter, Vampire, etc)

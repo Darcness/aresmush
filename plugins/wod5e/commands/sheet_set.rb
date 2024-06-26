@@ -104,6 +104,31 @@ module AresMUSH
 
           @main_value = main_value.downcase
           nil
+        when 'despair'
+          "Invalid Value: #{main_value}" unless main_value.to_s == '0' || main_value.to_s == '1'
+        when 'desperation', 'danger'
+          validate_numeric_main_value
+        when 'creed', 'drive'
+          ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
+            if model.wod5e_sheet.character_type.nil? || model.wod5e_sheet.character_type.empty?
+              "#{target_name} must have a type specified first"
+            elsif !WoD5e.character_types.key(model.wod5e_sheet.character_type)
+              model.wod5e_sheet.update(:character_type, '')
+              "#{target_name} has an invalid type! Resetting...."
+            end
+
+            begin
+              @main_value = if stat_name.downcase == 'creed'
+                              StatValidators.validate_creed_name(main_value, model.wod5e_sheet.character_type)
+                            else
+                              StatValidators.validate_drive_name(main_value, model.wod5e_sheet.character_type)
+                            end
+            rescue StandardError => e
+              return e.message
+            end
+
+            nil
+          end
         else
           "Invalid Stat: #{stat_name}"
         end
@@ -217,6 +242,30 @@ module AresMUSH
         end
       end
 
+      def handle_basic(model)
+        case stat_name.downcase
+        when 'type'
+          model.wod5e_sheet.update(character_type: main_value)
+        when 'despair'
+          unless main_value == '0' || main_value == '1'
+            client.emit_failure "Invalid Value: #{main_value} -- Possible values: 0, 1"
+            return
+          end
+
+          model.wod5e_sheet.update(despair?: main_value == '1')
+        when 'desperation'
+          model.wod5e_sheet.update(desperation: main_value)
+        when 'danger'
+          model.wod5e_sheet.update(danger: main_value)
+        when 'creed'
+          model.wod5e_sheet.update(creed: main_value)
+        when 'drive'
+          model.wod5e_sheet.update(drive: main_value)
+        end
+
+        client.emit_success "#{model.name} set #{stat_name} to: #{main_value}"
+      end
+
       def handle_attrib(model)
         attrib = model.wod5e_sheet.attribs.to_a.find { |a| a.name == stat_name }
 
@@ -277,14 +326,6 @@ module AresMUSH
                  end
 
         client.emit_success output
-      end
-
-      def handle_basic(model)
-        case stat_name.downcase
-        when 'type'
-          model.wod5e_sheet.update(character_type: main_value)
-          client.emit_success "#{model.wod5e_sheet.name} set Type to: #{main_value.capitalize}."
-        end
       end
 
       def handle_advantage(model)
