@@ -70,7 +70,11 @@ module AresMUSH
       end
 
       def format_stat_line(left_text, right_text, left_size, right_size)
-        "#{left(left_text, left_size, '.')} #{right(right_text, right_size)}"
+        format_info_line(left_text, right_text, left_size, right_size, '.')
+      end
+
+      def format_info_line(left_text, right_text, left_size, right_size, fill = ' ')
+        "#{left(left_text, left_size, fill)} #{right(right_text, right_size)}"
       end
 
       def format_tree_view(item_list)
@@ -96,6 +100,41 @@ module AresMUSH
           values.push(*edge.perks.map { |p| left("  -#{p.name}", 37) }) if edge.perks.count.positive?
         end
         values
+      end
+
+      def formatted_info_item(item_name, value = nil)
+        value ||= character.wod5e_sheet.send item_name
+        right_size = [value.to_s.length, 2].max
+        format_info_line("#{item_name.capitalize}: ", value, (23 - right_size), right_size)
+      end
+
+      def formatted_info_block
+        fields = []
+
+        case sheet.character_type
+        when WoD5e.character_types[:Hunter]
+          fields.push('creed', 'drive', 'health', 'desperation', 'danger', 'willpower', 'despair')
+        end
+
+        (fields.each_with_index.map do |field, idx|
+          slot = idx % 3
+          left_gutter = "#{' ' if slot.positive?} "
+
+          case field
+          when 'name'
+            value = character.name
+          when 'despair'
+            value = character.wod5e_sheet.despair? ? '%xh%xrYES%xn' : 'NO'
+          when 'health'
+            value = "#{character.wod5e_sheet.health} / #{character.wod5e_sheet.max_health}"
+          when 'willpower'
+            value = "#{character.wod5e_sheet.willpower} / #{character.wod5e_sheet.max_willpower}"
+          end
+
+          right_gutter = slot == 2 && idx != (fields.length - 1) ? '%R' : ''
+
+          "#{left_gutter}#{formatted_info_item(field, value)}#{right_gutter}"
+        end).join('')
       end
 
       def formatted_attributes_list

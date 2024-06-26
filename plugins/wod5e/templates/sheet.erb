@@ -1,5 +1,6 @@
 %lh
- <%= left(character.name, 24) %>  Type: <%= sheet.character_type.capitalize %>
+%x!<%= center("%xn%xh[ #{character.name} ]%xn%x!", 78, '-') %>%xn
+<%= formatted_info_block %>
 %x!<%= center('%xn%xh[ Attributes ]%xn%x!', 78, '-') %>%xn
  %xh<%= (attr_types_list.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
 <%= formatted_attributes_list  %>

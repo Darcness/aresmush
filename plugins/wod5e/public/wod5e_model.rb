@@ -5,6 +5,11 @@ module AresMUSH
     include ObjectModel
 
     attribute :character_type
+    attribute :concept, default: ''
+    attribute :ambition, default: ''
+    attribute :desire, default: ''
+    attribute :health, type: DataType::Integer, default: 0
+    attribute :willpower, type: DataType::Integer, default: 0
     attribute :total_experience, type: DataType::Float, default: 0.0
 
     reference :character, 'AresMUSH::Character'
@@ -15,8 +20,25 @@ module AresMUSH
     collection :xp_log, 'AresMUSH::WoD5eXPLog'
 
     # Hunter stuff
+    attribute :creed, default: ''
+    attribute :drive, default: ''
+    attribute :despair?, type: DataType::Boolean, default: false
+    attribute :desperation, type: DataType::Integer, default: 0
+    attribute :danger, type: DataType::Integer, default: 0
+
     collection :edges, 'AresMUSH::WoD5eEdge'
     collection :perks, 'AresMUSH::WoD5ePerk'
+
+    def max_health
+      stamina = attribs.to_a.find { |a| a.name == 'Stamina' }
+      (stamina&.value || 0) + 3
+    end
+
+    def max_willpower
+      composure = attribs.to_a.find { |a| a.name == 'Composure' }
+      resolve = attribs.to_a.find { |a| a.name == 'Resolve' }
+      (composure&.value || 0) + (resolve&.value || 0)
+    end
 
     def advantages
       all_advantages.select { |a| a.parent_id.nil? }
