@@ -16,7 +16,7 @@ module AresMUSH
 
       def initialize(char)
         @character = char
-        @sheet = @character.wod5e_sheet
+        @sheet = @character.sheet
         super "#{File.dirname(__FILE__)}/sheet.erb"
       end
 
@@ -25,13 +25,13 @@ module AresMUSH
       end
 
       def format_attribute(attribute_name)
-        attribute = sheet.attribs.select { |a| a.name.downcase == attribute_name.downcase }.first
+        attribute = sheet.get_attribute(attribute_name)
 
-        format_stat_triple(attribute_name, attribute ? attribute.value.to_s : '0')
+        format_stat_triple(attribute[0], attribute[1])
       end
 
       def format_skill(skill_name)
-        skill = sheet.skills.select { |s| s.name.downcase == skill_name.downcase }.first
+        skill = character.wod5e_sheet.skills.select { |s| s.name.downcase == skill_name.downcase }.first
         values = [format_stat_triple(skill_name, skill ? skill.value.to_s : '0')]
 
         skill&.specialties&.each { |s| values.push(left(" -#{s}", 24)) }
@@ -111,7 +111,7 @@ module AresMUSH
       def formatted_info_block
         fields = []
 
-        case sheet.character_type
+        case character.wod5e_sheet.character_type
         when WoD5e.character_types[:Hunter]
           fields.push('creed', 'drive', 'health', 'desperation', 'danger', 'willpower', 'despair')
         end
@@ -165,7 +165,7 @@ module AresMUSH
       end
 
       def formatted_advantages_list
-        advantages = sheet.advantages.sort_by(&:name)
+        advantages = character.wod5e_sheet.advantages.sort_by(&:name)
         return unless advantages.count.positive?
 
         advantages_out = format_advantages(advantages)
@@ -174,7 +174,7 @@ module AresMUSH
       end
 
       def formatted_powers_header
-        header = WoD5e.character_types.key(sheet.character_type) && type_data.dig(sheet.character_type, 'powers', 'name')
+        header = WoD5e.character_types.key(character.wod5e_sheet.character_type) && type_data.dig(character.wod5e_sheet.character_type, 'powers', 'name')
 
         out = center("%xn%xh[ #{header} ]%xn%x!", 78, '-')
 
@@ -182,9 +182,9 @@ module AresMUSH
       end
 
       def formatted_powers_list
-        case sheet.character_type
+        case character.wod5e_sheet.character_type
         when WoD5e.character_types[:Hunter]
-          edges = sheet.edges.sort_by(:name, order: 'ALPHA')
+          edges = character.wod5e_sheet.edges.sort_by(:name, order: 'ALPHA')
           return unless edges.count.positive?
 
           edges_out = format_edges(edges)

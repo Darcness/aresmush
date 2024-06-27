@@ -49,6 +49,21 @@ module AresMUSH
     include ObjectModel
 
     reference :wod5e_sheet, 'AresMUSH::Sheet'
+
+    def sheet
+      return nil if wod5e_sheet.nil?
+
+      return @_sheet unless @_sheet.nil?
+
+      case wod5e_sheet.character_type
+      when WoD5e.character_types[:Hunter]
+        @_sheet = AresMUSH::WoD5e::HunterSheet.new wod5e_sheet
+      else
+        raise InvalidCharacterTemplateError
+      end
+
+      @_sheet
+    end
   end
 
   # Sheet Attribute
