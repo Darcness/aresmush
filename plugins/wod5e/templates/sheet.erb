@@ -2,7 +2,7 @@
 %x!<%= center("%xn%xh[ #{character.name} ]%xn%x!", 78, '-') %>%xn
 <%= formatted_info_block %>
 %x!<%= center('%xn%xh[ Attributes ]%xn%x!', 78, '-') %>%xn
- %xh<%= (attr_types_list.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
+ %xh<%= (attr_dictionary.keys.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
 <%= formatted_attributes_list  %>
 %x!<%= center('%xn%xh[ Skills ]%xn%x!', 78, '-') %>%xn
 <%= formatted_skills_list  %>

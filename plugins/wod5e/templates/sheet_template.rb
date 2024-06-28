@@ -20,21 +20,14 @@ module AresMUSH
         super "#{File.dirname(__FILE__)}/sheet.erb"
       end
 
-      def attr_types_list
-        attr_dictionary.map { |attrgrp, _| attrgrp.to_s }
-      end
-
       def format_attribute(attribute_name)
-        attribute = sheet.get_attribute(attribute_name)
-
-        format_stat_triple(attribute[0], attribute[1])
+        format_stat_triple(attribute_name, sheet.get_attribute_value(attribute_name))
       end
 
       def format_skill(skill_name)
-        skill = character.wod5e_sheet.skills.select { |s| s.name.downcase == skill_name.downcase }.first
-        values = [format_stat_triple(skill_name, skill ? skill.value.to_s : '0')]
+        values = [format_stat_triple(skill_name, sheet.get_skill_value(skill_name))]
 
-        skill&.specialties&.each { |s| values.push(left(" -#{s}", 24)) }
+        sheet.get_specialties(skill_name).each { |s| values.push(left(" -#{s}", 24)) }
 
         values
       end
@@ -138,24 +131,24 @@ module AresMUSH
       end
 
       def formatted_attributes_list
-        ((0..(attr_dictionary[attr_types_list[0]].length - 1)).map do |i|
-          " #{(attr_types_list.map { |typename| format_attribute(attr_dictionary[typename][i]['name']) }).join('  ')} "
+        ((0..(attr_dictionary[attr_dictionary.keys[0]].length - 1)).map do |i|
+          " #{(attr_dictionary.keys.map { |typename| format_attribute(attr_dictionary[typename][i]['name']) }).join('  ')} "
         end).join('%R')
       end
 
       def formatted_skills_list
         physicals = []
-        skills_dictionary[attr_types_list[0]].each do |phys_skill|
+        skills_dictionary[attr_dictionary.keys[0]].each do |phys_skill|
           physicals.push(*format_skill(phys_skill['name']))
         end
 
         socials = []
-        skills_dictionary[attr_types_list[1]].each do |soci_skill|
+        skills_dictionary[attr_dictionary.keys[1]].each do |soci_skill|
           socials.push(*format_skill(soci_skill['name']))
         end
 
         mentals = []
-        skills_dictionary[attr_types_list[2]].each do |ment_skill|
+        skills_dictionary[attr_dictionary.keys[2]].each do |ment_skill|
           mentals.push(*format_skill(ment_skill['name']))
         end
 
@@ -174,7 +167,9 @@ module AresMUSH
       end
 
       def formatted_powers_header
-        header = WoD5e.character_types.key(character.wod5e_sheet.character_type) && type_data.dig(character.wod5e_sheet.character_type, 'powers', 'name')
+        header = WoD5e.character_types.key(character.wod5e_sheet.character_type) && type_data.dig(
+          character.wod5e_sheet.character_type, 'powers', 'name'
+        )
 
         out = center("%xn%xh[ #{header} ]%xn%x!", 78, '-')
 
