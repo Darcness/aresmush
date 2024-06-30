@@ -12,8 +12,7 @@ module AresMUSH
       # @example
       #    return { goals: Website.format_markdown_for_html(char.goals) }
       def self.get_fields_for_viewing(char, viewer)
-        attrib_out = char.sheet.attributes.map { |a| "#{a[0]}:#{a[1]}" }
-        { attribs: char.sheet.attributes }
+        { sheet: char.sheet.to_h.to_json }
       end
 
       # Gets custom fields for the character profile editor.

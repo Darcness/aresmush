@@ -4,14 +4,15 @@ module AresMUSH
   module WoD5e # :nodoc:
     # Base Sheet Class, meant to be inherited.
     class BaseSheet
-      @@base_stats = { # rubocop:disable Style/ClassVars
+      # rubocop:disable Style/ClassVars
+      @@base_stats = {
         Attribute: 'attribute',
         Skill: 'skill',
         Advantage: 'advantage'
       }
-
       @@attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
       @@skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
+      # rubocop:enable Style/ClassVars
 
       def initialize(wod5e_sheet)
         @sheet = wod5e_sheet
@@ -22,15 +23,17 @@ module AresMUSH
       end
 
       def get_attribute(attribute_name)
-        @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase }
+        @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase } ||
+          WoD5eAttrib.create(name: StatValidators.validate_attribute_name(attribute_name), sheet: @sheet)
       end
 
       def get_attribute_value(attribute_name)
-        get_attribute(attribute_name)&.value || 0
+        get_attribute(attribute_name).value || 0
       end
 
       def get_skill(skill_name)
-        @sheet.skills.to_a.find { |s| s.name.downcase == skill_name.downcase }
+        @sheet.skills.to_a.find { |s| s.name.downcase == skill_name.downcase } ||
+          WoD5eSkill.create(name: StatValidators.validate_skill_name(skill_name), sheet: @sheet)
       end
 
       def get_skill_value(skill_name)
@@ -46,20 +49,28 @@ module AresMUSH
       end
 
       def get_advantage_value(advantage_name)
-        get_advantage(advantage_name)&.value || 0
+        get_advantage(advantage_name).value || 0
       end
 
-      def attributes
-        values = []
-
-        @@attr_dictionary.each_key do |attrgrp|
-          values.push(*@@attr_dictionary[attrgrp].map { |a| [a['name'], get_advantage_value(a['name'])] })
-        end
-
-        values
+      def to_h
+        {
+          attribs: (@@attr_dictionary.keys.map do |typename|
+                      @@attr_dictionary[typename].map { |a| [a['name'], get_attribute_value(a['name'])] }.to_h
+                    end).flatten.inject(:merge),
+          skills: (@@skills_dictionary.keys.map do |typename|
+                     @@skills_dictionary[typename].map do |s|
+                       [s['name'], { value: (ski = get_skill(s['name'])).value, specialties: ski.specialties }]
+                     end.to_h
+                   end).inject(:merge),
+          advantages: @sheet.advantages.map { |adv| advantage_to_h(adv) }.to_h
+        }
       end
 
       private
+
+      def advantage_to_h(advantage)
+        [advantage.name, advantage.attributes.merge({ children: advantage.children.map { |adv| advantage_to_h(adv) }.to_h })]
+      end
 
       def seek_advantage(advantages, target_name)
         catch(:adv) do
@@ -72,31 +83,6 @@ module AresMUSH
           end
           throw :adv, nil
         end
-      end
-
-      # Assumes that we have a valid stat of the stat_type.  Should be combined with a StatValidator for public use.
-      def _fetch_stat(stat_type, stat_name)
-        case stat_type.downcase
-        when @@base_stats[:Attribute]
-          @sheet.attribs.to_a.find { |a| a.name.downcase == stat_name.downcase }
-        when @@base_stats[:Skill]
-          @sheet.skills.to_a.find { |s| s.name.downcase == stat_name.downcase }
-        else
-          raise InvalidStatTypeError
-        end
-      end
-
-      def _get_stat(stat_type, stat_name)
-        case stat_type.downcase
-        when @@base_stats[:Attribute]
-          stat_name = StatValidators.validate_attribute_name(stat_name)
-        when @@base_stats[:Skill]
-          stat_name = StatValidators.validate_skill_name(stat_name)
-        else
-          return nil
-        end
-
-        { name: stat_name, obj: _fetch_stat(stat_type, stat_name) }
       end
     end
 

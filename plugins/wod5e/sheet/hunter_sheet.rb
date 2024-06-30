@@ -13,37 +13,33 @@ module AresMUSH
         WoD5e.character_types[:Hunter]
       end
 
-      private
-
-      # Assumes that we have a valid stat of the stat_type.  Should be combined with a StatValidator for public use.
-      def _fetch_stat(stat_type, stat_name)
-        super
-      rescue InvalidStatTypeError
-        case stat_type.downcase
-        when @@hunter_stats[:Edge]
-          sheet.skills.to_a.find { |s| s.name.downcase == stat_name.downcase }&.value || 0
-        when @@hunter_stats[:Perk]
-          raise StandardError, 'Perks are fetched via get_perk()'
-        else
-          raise StandardError, "Invalid stat_type: #{stat_type}"
-        end
+      def get_edge(edge_name)
+        edge_name = StatValidators.validate_edge_name(edge_name, type)
+        @sheet.edges.to_a.find { |e| e.name.downcase.start_with?(edge_name.downcase) }
       end
 
-      def _get_stat(stat_type, stat_name)
-        base = super
+      def has_edge?(edge_name) # rubocop:disable Naming/PredicateName
+        get_edge(edge_name).nil?
+      end
 
-        return base unless base.nil?
+      def get_perk(edge_name, perk_name)
+        edge = get_edge(edge_name)
+        perk_name = StatValidators.validate_perk_name(perk_name, edge.name, type)
+        edge.perks.to_a.find { |p| p.name.downcase.start_with?(perk_name) }
+      end
 
-        case stat_type.downcase
-        when @@hunter_stats[:Edge]
-          stat_name = StatValidators.validate_skill_name(stat_name)
-        when @@hunter_stats[:Perk]
-          raise StandardError, 'Perks are fetched via get_perk()'
-        else
-          raise StandardError, "Invalid stat_type: #{stat_type}"
-        end
+      def has_perk?(edge_name, perk_name) # rubocop:disable Naming/PredicateName
+        get_perk(edge_name, perk_name).nil?
+      end
 
-        JSON.parse({ name: stat_name, obj: _fetch_stat(stat_type, stat_name) }.to_json, object_class: OpenStruct)
+      def to_h
+        obj = super
+
+        obj.merge(
+          {
+            edges: @sheet.edges.map { |e| [e.name, e.perks.map(&:name)] }.to_h
+          }
+        )
       end
     end
   end
