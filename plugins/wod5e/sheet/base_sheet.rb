@@ -12,6 +12,7 @@ module AresMUSH
       }
       @@attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
       @@skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
+      @@type_data = WoD5e.character_types.map { |_, v| [v, Global.read_config(PLUGIN_NAME, v)] }.to_h
       # rubocop:enable Style/ClassVars
 
       def initialize(wod5e_sheet)
@@ -54,6 +55,8 @@ module AresMUSH
 
       def to_h
         {
+          type:,
+          powers_title: @@type_data.dig(type, 'powers', 'name') || '',
           attribs: (@@attr_dictionary.keys.map do |typename|
                       @@attr_dictionary[typename].map { |a| [a['name'], get_attribute_value(a['name'])] }.to_h
                     end).flatten.inject(:merge),
