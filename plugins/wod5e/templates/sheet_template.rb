@@ -49,7 +49,7 @@ module AresMUSH
           text_out = format_stat_double(left_text, right_text, [2, right_text.length].max)
 
           values.push(text_out)
-          values.push(*format_advantages(advantage.children.to_a, level + 1)) unless advantage.children.to_a.empty?
+          values.concat(format_advantages(advantage.children.sort_by(:name, order: 'ALPHA').to_a, level + 1)) unless advantage.children.to_a.empty? # rubocop:disable Layout/LineLength
         end
         values
       end
@@ -90,7 +90,7 @@ module AresMUSH
                       edge.respond_to?(:perks)
 
           values.push(left(edge.name, 37))
-          values.push(*edge.perks.map { |p| left("  -#{p.name}", 37) }) if edge.perks.count.positive?
+          values.concat(edge.perks.sort_by(:name, order: 'ALPHA').map { |p| left("  -#{p.name}", 37) })
         end
         values
       end

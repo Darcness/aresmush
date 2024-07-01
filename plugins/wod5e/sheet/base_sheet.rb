@@ -48,7 +48,7 @@ module AresMUSH
           set_flaw = (adv_data['flaws'] && rand(-8..1).positive?) || adv_data['levels'].nil?
           levels = (set_flaw ? adv_data['flaws'] : adv_data['levels'])
           level = levels.sample
-          
+
           adv = WoD5eAdvantage.create(name: level['name'], value: (set_flaw ? (-1 * level['value']) : level['value']), sheet: @sheet)
 
           next if set_flaw
@@ -113,14 +113,15 @@ module AresMUSH
                        [s['name'], { value: (ski = get_skill(s['name'])).value, specialties: ski.specialties }]
                      end.to_h
                    end).inject(:merge),
-          advantages: @sheet.advantages.map { |adv| advantage_to_h(adv) }.to_h
+          advantages: @sheet.advantages.sort_by(&:name).map { |adv| advantage_to_h(adv) }.to_h
         }
       end
 
       private
 
       def advantage_to_h(advantage)
-        [advantage.name, advantage.attributes.merge({ children: advantage.children.map { |adv| advantage_to_h(adv) }.to_h })]
+        children = advantage.children.sort_by(:name, order: 'ALPHA')&.map { |a| advantage_to_h(a) }.to_h
+        [advantage.name, advantage.attributes.merge({ children: })]
       end
 
       def seek_advantage(advantages, target_name)

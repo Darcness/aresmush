@@ -57,7 +57,7 @@ module AresMUSH
 
         obj.merge(
           {
-            edges: @sheet.edges.map { |e| [e.name, e.perks.map(&:name)] }.to_h
+            edges: @sheet.edges.sort_by(:name, order: 'ALPHA').map { |e| [e.name, e.perks.sort_by(:name, order: 'ALPHA').map(&:name)] }.to_h
           }
         )
       end
