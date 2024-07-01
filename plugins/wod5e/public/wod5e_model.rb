@@ -43,6 +43,17 @@ module AresMUSH
     def advantages
       all_advantages.select { |a| a.parent_id.nil? }
     end
+
+    def delete
+      attribs.each(&:delete)
+      skills.each(&:delete)
+      all_advantages.each(&:delete)
+      xp_log.each(&:delete)
+      edges.each(&:delete)
+      perks.each(&:delete)
+
+      super
+    end
   end
 
   class Character < Ohm::Model # :nodoc:

@@ -23,6 +23,54 @@ module AresMUSH
         raise InvalidCharacterTemplateError, 'BaseSheet Object does not have a type!'
       end
 
+      def initialize_random_stats
+        # Attributes
+        @@attr_dictionary.each_value do |attr_group|
+          attr_group.each { |attr_name| get_attribute(attr_name['name']).update(value: rand(1..5)) }
+        end
+
+        # Skills
+        @@skills_dictionary.each_value do |skill_group|
+          skill_group.each do |skill_name|
+            skill = get_skill(skill_name['name'])
+            value = rand(0..5)
+            skill.update(value:)
+            next unless value.positive?
+
+            specs = [0, rand(-6..3)].min
+            next unless specs.positive?
+
+            skill.specialties = (0..specs).map { |_| skill_name['specialties'][rand(0..(skill_name['specialties'].length))] }
+          end
+        end
+
+        @@type_data[type]['advantages'].sample(8).each do |adv_data|
+          set_flaw = (adv_data['flaws'] && rand(-8..1).positive?) || adv_data['levels'].nil?
+          levels = (set_flaw ? adv_data['flaws'] : adv_data['levels'])
+          level = levels.sample
+          
+          adv = WoD5eAdvantage.create(name: level['name'], value: (set_flaw ? (-1 * level['value']) : level['value']), sheet: @sheet)
+
+          next if set_flaw
+
+          adv.update(secondary_value: rand(1..3)) if adv_data['secondary']
+
+          if (traits = adv_data.dig('traits', 'levels'))
+            traits.sample(rand(1..traits.length)).each do |t|
+              WoD5eAdvantage.create(name: t['name'], value: t['value'], sheet: @sheet, parent: adv)
+            end
+          end
+
+          if (traits = adv_data.dig('traits', 'flaws')) # rubocop:disable Style/Next
+            traits.sample(rand(1..traits.length)).each do |t|
+              WoD5eAdvantage.create(name: t['name'], value: (t['value'] * -1), sheet: @sheet, parent: adv)
+            end
+          end
+        end
+
+        nil
+      end
+
       def get_attribute(attribute_name)
         @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase } ||
           WoD5eAttrib.create(name: StatValidators.validate_attribute_name(attribute_name), sheet: @sheet)

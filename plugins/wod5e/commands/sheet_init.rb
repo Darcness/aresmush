@@ -12,7 +12,8 @@ module AresMUSH
         args = cmd.parse_args(ArgParser.flexible_args)
         @target_name = titlecase_arg(args.arg1)
         @character_type = args.arg2
-        @confirm = args.arg3&.downcase == 'confirm'
+        @confirm = args.arg3&.downcase&.start_with?('confirm')
+        @random = args.arg3&.downcase == 'random' || args.arg3&.downcase == 'confirm-random'
       end
 
       def check_args
@@ -43,6 +44,8 @@ module AresMUSH
 
           sheet = Sheet.create(character: model, character_type: character_type.downcase)
           model.update(wod5e_sheet: sheet)
+
+          model.sheet.initialize_random_stats if @random
           client.emit_success t('wod5e.sheet_init_complete', name: model.name, character_type: model.wod5e_sheet.character_type.capitalize)
         end
       end
