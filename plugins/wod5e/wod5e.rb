@@ -28,6 +28,10 @@ module AresMUSH
       end
     end
 
+    def self.build_web_profile_data(char, enactor)
+      { sheet: char.sheet.to_h }
+    end
+
     # @yieldparam model [Character]
     def self.validate_sheet(target_name, client, enactor, &block) # rubocop:disable Lint/UnusedMethodArgument
       ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|

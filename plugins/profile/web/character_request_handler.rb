@@ -67,6 +67,15 @@ module AresMUSH
         add_to_profile profile_data, Chargen.build_web_profile_data(char, enactor)
         add_to_profile profile_data, Roles.build_web_profile_data(char, enactor)
         add_to_profile profile_data, Scenes.build_web_profile_data(char, enactor)
+
+        (Global.plugin_manager.plugins.select do |plugin|
+          plugin.respond_to?(:build_web_profile_data) &&
+          plugin.method(:build_web_profile_data).parameters[0] == %i[req char] &&
+          plugin.method(:build_web_profile_data).parameters[1] == %i[req enactor]
+        end).each do |p|
+          Global.logger.debug p
+          add_to_profile profile_data, [[p.to_s.gsub('AresMUSH::', '').downcase, p.send(:build_web_profile_data, char, enactor)]].to_h
+        end
         
         if (FS3Skills.is_enabled?)
           profile_data['fs3'] = FS3Skills.build_web_char_data(char, enactor)
