@@ -80,6 +80,18 @@ module AresMUSH
         if (error)
           return { error: error }
         end
+
+        errors = Global.plugin_manager.plugins.map do |plugin|
+          next unless plugin.respond_to?(:save_web_profile_data) &&
+                      plugin.method(:save_web_profile_data).parameters[0] == %i[req char] &&
+                      plugin.method(:save_web_profile_data).parameters[1] == %i[req enactor] &&
+                      plugin.method(:save_web_profile_data).parameters[2] == %i[req char_data]
+
+          plugin.send(:save_web_profile_data, char, enactor, request.args)
+        end
+        if (errors.class == Array && errors.any?)
+          return { error: errors.join("\n") }
+        end
         
         errors = CustomCharFields.save_fields_from_profile_edit2(char, enactor, request.args) || []
         if (errors.class == Array && errors.any?)

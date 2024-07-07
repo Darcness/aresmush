@@ -33,6 +33,16 @@ module AresMUSH
         end
           
         prefs = Manage.is_extra_installed?("prefs") ? Website.format_markdown_for_html(char.rp_prefs) : nil
+
+        custom = CustomCharFields.get_fields_for_viewing(char, enactor)
+
+        Global.plugin_manager.plugins.each do |plugin|
+          next unless plugin.respond_to?(:build_web_profile_data) &&
+                      plugin.method(:build_web_profile_data).parameters[0] == %i[req char] &&
+                      plugin.method(:build_web_profile_data).parameters[1] == %i[req enactor]
+
+          custom.merge!([[plugin.to_s.gsub('AresMUSH::', '').downcase, plugin.send(:build_web_profile_data, char, enactor)]].to_h)
+        end
           
         profile_data = {
           id: char.id,
@@ -56,7 +66,7 @@ module AresMUSH
           show_notes: char == enactor || Utils.can_manage_notes?(enactor),
           siteinfo: siteinfo,
           rp_prefs: prefs,
-          custom: CustomCharFields.get_fields_for_viewing(char, enactor),
+          custom: custom,
         }
         
         add_to_profile profile_data, Demographics.build_web_profile_data(char, enactor)
@@ -68,15 +78,6 @@ module AresMUSH
         add_to_profile profile_data, Roles.build_web_profile_data(char, enactor)
         add_to_profile profile_data, Scenes.build_web_profile_data(char, enactor)
 
-        (Global.plugin_manager.plugins.select do |plugin|
-          plugin.respond_to?(:build_web_profile_data) &&
-          plugin.method(:build_web_profile_data).parameters[0] == %i[req char] &&
-          plugin.method(:build_web_profile_data).parameters[1] == %i[req enactor]
-        end).each do |p|
-          Global.logger.debug p
-          add_to_profile profile_data, [[p.to_s.gsub('AresMUSH::', '').downcase, p.send(:build_web_profile_data, char, enactor)]].to_h
-        end
-        
         if (FS3Skills.is_enabled?)
           profile_data['fs3'] = FS3Skills.build_web_char_data(char, enactor)
         end
