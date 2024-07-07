@@ -8,16 +8,6 @@ module AresMUSH
 
       attr_accessor :target_name, :stat_type, :stat_name, :main_value, :optional_value
 
-      @@stat_types = { # rubocop:disable Style/ClassVars
-        Basic: 'basic',
-        Attribute: 'attribute',
-        Skill: 'skill',
-        Specialty: 'specialty',
-        Advantage: 'advantage',
-        Edge: 'edge',
-        Perk: 'perk'
-      }
-
       def parse_args
         args = cmd.parse_args(%r{(?<arg1>[^(=|/)]+)=?(?<arg2>[^/]+)?/?(?<arg3>[^=]+)?=?(?<arg4>[^/]+)?/?(?<arg5>.+)?})
         @target_name = titlecase_arg(args.arg1)
@@ -29,19 +19,19 @@ module AresMUSH
 
       def check_args
         case stat_type.downcase
-        when @@stat_types[:Basic]
+        when WoD5e.stat_types[:Basic]
           validate_basic_args
-        when @@stat_types[:Attribute]
+        when WoD5e.stat_types[:Attribute]
           validate_attribute_args
-        when @@stat_types[:Skill]
+        when WoD5e.stat_types[:Skill]
           validate_skill_args
-        when @@stat_types[:Specialty]
+        when WoD5e.stat_types[:Specialty]
           validate_specialty_args
-        when @@stat_types[:Advantage]
+        when WoD5e.stat_types[:Advantage]
           validate_advantage_args
-        when @@stat_types[:Edge]
+        when WoD5e.stat_types[:Edge]
           validate_edge_args
-        when @@stat_types[:Perk]
+        when WoD5e.stat_types[:Perk]
           validate_perk_args
         else
           "Invalid type: #{stat_type}"
@@ -55,19 +45,19 @@ module AresMUSH
       def handle
         WoD5e.validate_sheet(target_name, enactor, client) do |model|
           case stat_type.downcase
-          when @@stat_types[:Basic]
+          when WoD5e.stat_types[:Basic]
             handle_basic(model)
-          when @@stat_types[:Attribute]
+          when WoD5e.stat_types[:Attribute]
             handle_attrib(model)
-          when @@stat_types[:Skill]
+          when WoD5e.stat_types[:Skill]
             handle_skill(model)
-          when @@stat_types[:Specialty]
+          when WoD5e.stat_types[:Specialty]
             handle_specialty(model)
-          when @@stat_types[:Advantage]
+          when WoD5e.stat_types[:Advantage]
             handle_advantage(model)
-          when @@stat_types[:Edge]
+          when WoD5e.stat_types[:Edge]
             handle_edge(model)
-          when @@stat_types[:Perk]
+          when WoD5e.stat_types[:Perk]
             handle_perk(model)
           else
             client.emit_failure "Invalid type: #{stat_type} -- We got here past check_args, which is no bueno. Talk to a coder, for realz."

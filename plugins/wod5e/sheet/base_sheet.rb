@@ -5,11 +5,6 @@ module AresMUSH
     # Base Sheet Class, meant to be inherited.
     class BaseSheet
       # rubocop:disable Style/ClassVars
-      @@base_stats = {
-        Attribute: 'attribute',
-        Skill: 'skill',
-        Advantage: 'advantage'
-      }
       @@attr_dictionary = Global.read_config(PLUGIN_NAME, 'attributes')
       @@skills_dictionary = Global.read_config(PLUGIN_NAME, 'skills')
       @@type_data = WoD5e.character_types.map { |_, v| [v, Global.read_config(PLUGIN_NAME, v)] }.to_h

@@ -4,11 +4,6 @@ module AresMUSH
   module WoD5e # :nodoc:
     # Base Sheet Class, meant to be inherited.
     class HunterSheet < BaseSheet
-      @@hunter_stats = { # rubocop:disable Style/ClassVars
-        Edge: 'edge',
-        Perk: 'perk'
-      }
-
       def type
         WoD5e.character_types[:Hunter]
       end

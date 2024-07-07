@@ -28,14 +28,6 @@ module AresMUSH
       end
     end
 
-    @@character_types = { # rubocop:disable Style/ClassVars
-      Hunter: 'hunter'
-    }
-
-    def self.character_types
-      @@character_types
-    end
-
     # @yieldparam model [Character]
     def self.validate_sheet(target_name, client, enactor, &block) # rubocop:disable Lint/UnusedMethodArgument
       ClassTargetFinder.with_a_character(target_name, client, enactor) do |model|
