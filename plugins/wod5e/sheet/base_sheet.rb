@@ -14,10 +14,97 @@ module AresMUSH
         @sheet = wod5e_sheet
       end
 
+      #########################################
+      # Raw Stats
       def type
         raise InvalidCharacterTemplateError, 'BaseSheet Object does not have a type!'
       end
 
+      def health
+        @sheet.health
+      end
+
+      def health_agg
+        @sheet.health_agg
+      end
+
+      def willpower
+        @sheet.willpower
+      end
+
+      def willpower_agg
+        @sheet.willpower_agg
+      end
+
+      def max_health
+        get_attribute_value('Stamina') + 3
+      end
+
+      def max_willpower
+        get_attribute_value('Composure') + get_attribute_value('Resolve')
+      end
+
+      ##########################################
+      # Stat Utilities
+
+      def get_skill_value(skill_name)
+        get_skill(skill_name)&.value || 0
+      end
+
+      def get_attribute_value(attribute_name)
+        get_attribute(attribute_name).value || 0
+      end
+
+      def get_advantage_value(advantage_name)
+        get_advantage(advantage_name).value || 0
+      end
+
+      ##########################################
+      # 'getters' -- return the entire DB object
+
+      def get_attribute(attribute_name)
+        @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase } ||
+          WoD5eAttrib.create(name: StatValidators.validate_attribute_name(attribute_name), sheet: @sheet)
+      end
+
+      def get_skill(skill_name)
+        @sheet.skills.to_a.find { |s| s.name.downcase == skill_name.downcase } ||
+          WoD5eSkill.create(name: StatValidators.validate_skill_name(skill_name), sheet: @sheet)
+      end
+
+      def get_specialties(skill_name)
+        get_skill(skill_name)&.specialties || []
+      end
+
+      def get_advantage(advantage_name)
+        seek_advantage(@sheet.advantages, advantage_name)
+      end
+
+      #########################################
+      # utilities
+
+      # creates a hash of the object, used for exporting the values without all the DB fluff
+      def to_h
+        {
+          type:,
+          trackers: {
+            health: { superficial: health, agg: health_agg, max: max_health },
+            willpower: { superficial: willpower, agg: willpower_agg, max: max_willpower }
+          },
+          powers_title: @@type_data.dig(type, 'powers', 'name') || '',
+          attribs: (@@attr_dictionary.keys.map do |typename|
+                      @@attr_dictionary[typename].map { |a| [a['name'], get_attribute_value(a['name'])] }.to_h
+                    end).flatten.inject(:merge),
+          skills: (@@skills_dictionary.keys.map do |typename|
+                     @@skills_dictionary[typename].map do |s|
+                       [s['name'], { value: (ski = get_skill(s['name'])).value, specialties: ski.specialties }]
+                     end.to_h
+                   end).inject(:merge),
+          advantages: @sheet.advantages.sort_by(&:name).map { |adv| advantage_to_h(adv) }.to_h
+        }
+      end
+
+      # Initializes a sheet with completely random stats, only to be used for testing.
       def initialize_random_stats
         # Attributes
         @@attr_dictionary.each_value do |attr_group|
@@ -64,52 +151,6 @@ module AresMUSH
         end
 
         nil
-      end
-
-      def get_attribute(attribute_name)
-        @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase } ||
-          WoD5eAttrib.create(name: StatValidators.validate_attribute_name(attribute_name), sheet: @sheet)
-      end
-
-      def get_attribute_value(attribute_name)
-        get_attribute(attribute_name).value || 0
-      end
-
-      def get_skill(skill_name)
-        @sheet.skills.to_a.find { |s| s.name.downcase == skill_name.downcase } ||
-          WoD5eSkill.create(name: StatValidators.validate_skill_name(skill_name), sheet: @sheet)
-      end
-
-      def get_skill_value(skill_name)
-        get_skill(skill_name)&.value || 0
-      end
-
-      def get_specialties(skill_name)
-        get_skill(skill_name)&.specialties || []
-      end
-
-      def get_advantage(advantage_name)
-        seek_advantage(@sheet.advantages, advantage_name)
-      end
-
-      def get_advantage_value(advantage_name)
-        get_advantage(advantage_name).value || 0
-      end
-
-      def to_h
-        {
-          type:,
-          powers_title: @@type_data.dig(type, 'powers', 'name') || '',
-          attribs: (@@attr_dictionary.keys.map do |typename|
-                      @@attr_dictionary[typename].map { |a| [a['name'], get_attribute_value(a['name'])] }.to_h
-                    end).flatten.inject(:merge),
-          skills: (@@skills_dictionary.keys.map do |typename|
-                     @@skills_dictionary[typename].map do |s|
-                       [s['name'], { value: (ski = get_skill(s['name'])).value, specialties: ski.specialties }]
-                     end.to_h
-                   end).inject(:merge),
-          advantages: @sheet.advantages.sort_by(&:name).map { |adv| advantage_to_h(adv) }.to_h
-        }
       end
 
       private

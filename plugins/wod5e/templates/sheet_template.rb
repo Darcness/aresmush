@@ -55,11 +55,11 @@ module AresMUSH
       end
 
       def format_stat_double(left_text, right_text, right_size = 2)
-        format_stat_line left_text, right_text, (36 - right_size), right_size
+        format_stat_line(left_text, right_text, (36 - right_size), right_size)
       end
 
       def format_stat_triple(left_text, right_text, right_size = 2)
-        format_stat_line left_text, right_text, (23 - right_size), right_size
+        format_stat_line(left_text, right_text, (23 - right_size), right_size)
       end
 
       def format_stat_line(left_text, right_text, left_size, right_size)
@@ -96,7 +96,9 @@ module AresMUSH
       end
 
       def formatted_info_item(item_name, value = nil)
-        value ||= character.wod5e_sheet.send item_name
+        return format_info_line('', '', 23, 0) if item_name.empty?
+
+        value ||= sheet.send item_name
         right_size = [value.to_s.length, 2].max
         format_info_line("#{item_name.capitalize}: ", value, (23 - right_size), right_size)
       end
@@ -106,7 +108,7 @@ module AresMUSH
 
         case character.wod5e_sheet.character_type
         when WoD5e.character_types[:Hunter]
-          fields.push('creed', 'drive', 'health', 'desperation', 'danger', 'willpower', 'despair')
+          fields.push('creed', 'drive', '', 'danger', 'desperation', 'despair')
         end
 
         (fields.each_with_index.map do |field, idx|
@@ -117,17 +119,29 @@ module AresMUSH
           when 'name'
             value = character.name
           when 'despair'
-            value = character.wod5e_sheet.despair? ? '%xh%xrYES%xn' : 'NO'
+            value = sheet.despair? ? '%xh%xrYES%xn' : 'NO'
           when 'health'
-            value = "#{character.wod5e_sheet.health} / #{character.wod5e_sheet.max_health}"
+            value = "#{sheet.health} / #{sheet.max_health}"
           when 'willpower'
-            value = "#{character.wod5e_sheet.willpower} / #{character.wod5e_sheet.max_willpower}"
+            value = "#{sheet.willpower} / #{sheet.max_willpower}"
           end
 
           right_gutter = slot == 2 && idx != (fields.length - 1) ? '%R' : ''
 
           "#{left_gutter}#{formatted_info_item(field, value)}#{right_gutter}"
         end).join('')
+      end
+
+      def formatted_trackers_block
+        # eventually werewolf will need a few extra bits in here.
+        formatted_fields = ["#{center('Health', 39)}#{center('Willpower', 39)}%R",
+                            center(build_tracker_values(sheet.health, sheet.health_agg, sheet.max_health), 39),
+                            center(build_tracker_values(sheet.willpower, sheet.willpower_agg, sheet.max_willpower), 39)]
+        formatted_fields.join('')
+      end
+
+      def build_tracker_values(superficial, aggravated, total)
+        (0..(total - 1)).map { |i| "[#{i < aggravated ? 'X' : i < (superficial + aggravated) ? '/' : ' '}]" }.join('') # rubocop:disable Style/NestedTernaryOperator
       end
 
       def formatted_attributes_list

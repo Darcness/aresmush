@@ -1,6 +1,8 @@
 %lh
 %x!<%= center("%xn%xh[ #{character.name} ]%xn%x!", 78, '-') %>%xn
 <%= formatted_info_block %>
+%x!<%= center('%xn%xh[ Trackers ]%xn%x!', 78, '-') %>%xn
+<%= formatted_trackers_block %>
 %x!<%= center('%xn%xh[ Attributes ]%xn%x!', 78, '-') %>%xn
  %xh<%= (attr_dictionary.keys.map { |attrtype| center(attrtype, 24, '-') }).join('  ') %>%xn
 <%= formatted_attributes_list  %>
