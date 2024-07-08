@@ -91,8 +91,19 @@ module AresMUSH
 
         @sheet.update(desperation: rand(0..5))
         @sheet.update(danger: rand(0..5))
-        @sheet.update(health: rand(0..5))
-        @sheet.update(willpower: rand(0..5))
+        @sheet.update(health: (rand(0..max_health) / 2).floor)
+        @sheet.update(health_agg: (rand(0..max_health) / 2).floor)
+        @sheet.update(willpower: (rand(0..max_willpower) / 2).floor)
+        @sheet.update(willpower_agg: (rand(0..max_willpower) / 2).floor)
+        @sheet.update(depair?: rand(0..1).positive?)
+
+        raise InvalidClassDataError, "#{type} is missing creeds" if (creeds = @@type_data.dig(type, 'creeds')).nil?
+
+        @sheet.update(creed: creeds.sample['name'])
+
+        raise InvalidClassDataError, "#{type} is missing drives" if (drives = @@type_data.dig(type, 'drives')).nil?
+
+        @sheet.update(drive: drives.sample['name'])
 
         nil
       end

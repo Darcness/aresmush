@@ -181,5 +181,13 @@ module AresMUSH
         super(msg)
       end
     end
+
+    # Error for Invalid Class Data in Config
+    class InvalidClassDataError < StandardError
+      def initialize(msg = 'Invalid Class Data!', exception_type = 'custom')
+        @exception_type = exception_type
+        super(msg)
+      end
+    end
   end
 end
