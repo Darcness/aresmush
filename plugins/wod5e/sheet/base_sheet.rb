@@ -93,11 +93,11 @@ module AresMUSH
           },
           powers_title: @@type_data.dig(type, 'powers', 'name') || '',
           attribs: (@@attr_dictionary.keys.map do |typename|
-                      @@attr_dictionary[typename].map { |a| [a['name'], get_attribute_value(a['name'])] }.to_h
+                      @@attr_dictionary[typename].map { |a| [a['name'], { value: get_attribute_value(a['name']), max: 5 }] }.to_h
                     end).flatten.inject(:merge),
           skills: (@@skills_dictionary.keys.map do |typename|
                      @@skills_dictionary[typename].map do |s|
-                       [s['name'], { value: (ski = get_skill(s['name'])).value, specialties: ski.specialties }]
+                       [s['name'], { value: (ski = get_skill(s['name'])).value, max: 5, specialties: ski.specialties }]
                      end.to_h
                    end).inject(:merge),
           advantages: @sheet.advantages.sort_by(&:name).map { |adv| advantage_to_h(adv) }.to_h

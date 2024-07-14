@@ -30,14 +30,14 @@ module AresMUSH
 
         prefs = Manage.is_extra_installed?('prefs') ? Website.format_markdown_for_html(char.rp_prefs) : nil
 
-        custom = CustomCharFields.get_fields_for_viewing(char, enactor)
+        plugins = {}
 
         Global.plugin_manager.plugins.each do |plugin|
           next unless plugin.respond_to?(:build_web_profile_data) &&
                       plugin.method(:build_web_profile_data).parameters[0] == %i[req char] &&
                       plugin.method(:build_web_profile_data).parameters[1] == %i[req enactor]
 
-          custom.merge!([[plugin.to_s.gsub('AresMUSH::', '').downcase, plugin.send(:build_web_profile_data, char, enactor)]].to_h)
+          plugins.merge!([[plugin.to_s.gsub('AresMUSH::', '').downcase, plugin.send(:build_web_profile_data, char, enactor)]].to_h)
         end
 
         profile_data = {
@@ -62,7 +62,8 @@ module AresMUSH
           show_notes: char == enactor || Utils.can_manage_notes?(enactor),
           siteinfo:,
           rp_prefs: prefs,
-          custom:
+          custom: CustomCharFields.get_fields_for_viewing(char, enactor),
+          plugins:
         }
 
         add_to_profile profile_data, Demographics.build_web_profile_data(char, enactor)
