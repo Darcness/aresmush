@@ -45,14 +45,14 @@ module AresMUSH
 
       # get an edge
       def get_edge(edge_name)
-        edge_name = StatValidator.validate_edge_name(edge_name, type)
+        edge_name = StatValidators.validate_edge_name(edge_name, type)
         @sheet.edges.to_a.find { |e| e.name.downcase.start_with?(edge_name.downcase) }
       end
 
       # get a perk
       def get_perk(edge_name, perk_name)
         edge = get_edge(edge_name)
-        perk_name = StatValidator.validate_perk_name(perk_name, edge.name, type)
+        perk_name = StatValidators.validate_perk_name(perk_name, edge.name, type)
         edge.perks.to_a.find { |p| p.name.downcase.start_with?(perk_name) }
       end
 

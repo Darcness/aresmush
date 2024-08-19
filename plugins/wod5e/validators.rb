@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module AresMUSH
-  module WoD5e
+  module WoD5e # :nodoc:
     # Validate Stats for sheet names
-    class StatValidator
+    class StatValidators
       mattr_accessor :attr_dictionary, :skills_dictionary, :type_data
 
       # rubocop:disable Style/ClassVars

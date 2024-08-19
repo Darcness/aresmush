@@ -109,9 +109,9 @@ module AresMUSH
 
             begin
               @main_value = if stat_name.downcase == 'creed'
-                              StatValidator.validate_creed_name(main_value, model.wod5e_sheet.character_type)
+                              StatValidators.validate_creed_name(main_value, model.wod5e_sheet.character_type)
                             else
-                              StatValidator.validate_drive_name(main_value, model.wod5e_sheet.character_type)
+                              StatValidators.validate_drive_name(main_value, model.wod5e_sheet.character_type)
                             end
             rescue StandardError => e
               return e.message
@@ -125,21 +125,21 @@ module AresMUSH
       end
 
       def validate_attribute_args
-        @stat_name = AresMUSH::WoD5e::StatValidator.validate_attribute_name(stat_name)
+        @stat_name = AresMUSH::WoD5e::StatValidators.validate_attribute_name(stat_name)
         validate_numeric_main_value
       rescue StandardError => e
         e.message
       end
 
       def validate_skill_args
-        @stat_name = StatValidator.validate_skill_name(stat_name)
+        @stat_name = StatValidators.validate_skill_name(stat_name)
         validate_numeric_main_value
       rescue StandardError => e
         e.message
       end
 
       def validate_specialty_args
-        @stat_name = StatValidator.validate_skill_name(stat_name)
+        @stat_name = StatValidators.validate_skill_name(stat_name)
         nil
       rescue StandardError => e
         e.message
@@ -164,7 +164,7 @@ module AresMUSH
 
           # Step 2, check the Advantage name
           begin
-            @stat_name = StatValidator.validate_advantage_name(stat_name, model.wod5e_sheet.character_type)
+            @stat_name = StatValidators.validate_advantage_name(stat_name, model.wod5e_sheet.character_type)
           rescue StandardError => e
             return e.message
           end
@@ -174,7 +174,7 @@ module AresMUSH
             validate_numeric_optional_value unless optional_value.nil?
           else # got a string instead, make it a trait!
             begin
-              @main_value = StatValidator.validate_trait_name(stat_name, main_value, model.wod5e_sheet.character_type)
+              @main_value = StatValidators.validate_trait_name(stat_name, main_value, model.wod5e_sheet.character_type)
             rescue StandardError => e
               return e.message
             end
@@ -199,7 +199,7 @@ module AresMUSH
           end
 
           begin
-            @stat_name = StatValidator.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
+            @stat_name = StatValidators.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
           rescue StandardError => e
             return e.message
           end
@@ -220,8 +220,8 @@ module AresMUSH
           end
 
           begin
-            @stat_name = StatValidator.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
-            @main_value = StatValidator.validate_perk_name(main_value, stat_name, model.wod5e_sheet.character_type)
+            @stat_name = StatValidators.validate_edge_name(stat_name, model.wod5e_sheet.character_type)
+            @main_value = StatValidators.validate_perk_name(main_value, stat_name, model.wod5e_sheet.character_type)
           rescue StandardError => e
             return e.message
           end

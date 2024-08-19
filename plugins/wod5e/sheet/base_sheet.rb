@@ -64,12 +64,12 @@ module AresMUSH
 
       def get_attribute(attribute_name)
         @sheet.attribs.to_a.find { |a| a.name.downcase == attribute_name.downcase } ||
-          WoD5eAttrib.create(name: StatValidator.validate_attribute_name(attribute_name), sheet: @sheet)
+          WoD5eAttrib.create(name: StatValidators.validate_attribute_name(attribute_name), sheet: @sheet)
       end
 
       def get_skill(skill_name)
         @sheet.skills.to_a.find { |s| s.name.downcase == skill_name.downcase } ||
-          WoD5eSkill.create(name: StatValidator.validate_skill_name(skill_name), sheet: @sheet)
+          WoD5eSkill.create(name: StatValidators.validate_skill_name(skill_name), sheet: @sheet)
       end
 
       def get_specialties(skill_name)
