@@ -1,0 +1,58 @@
+wod5e:
+  chargen:
+    allowed_types:
+    - hunter
+    values:
+      attributes:
+      -
+        value: 4
+        amount: 1
+      -
+        value: 3
+        amount: 3
+      -
+        value: 2
+        amount: 4
+      -
+        value: 1
+        amount: 1
+      skills:
+      -
+        name: Jack of all Trades
+        starting_points:
+        - 
+          value: 3
+          amount: 1
+        -
+          value: 2
+          amount: 8
+        -
+          value: 1
+          amount: 10
+      -
+        name: Balanced
+        starting_points:
+        -
+          value: 3
+          amount: 3
+        - 
+          value: 2
+          amount: 5
+        -
+          value: 1
+          amount: 7
+      -
+        name: Specialist
+        starting_points:
+        -
+          value: 4
+          amount: 1
+        -
+          value: 3
+          amount: 3
+        -
+          value: 2
+          amount: 3
+        -
+          value: 1
+          amount: 3

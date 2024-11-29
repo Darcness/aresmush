@@ -146,13 +146,5 @@ module AresMUSH
         drive['name']
       end
     end
-
-    # Error for Invalid Character Templates (Hunter, Vampire, etc)
-    class InvalidCharacterTemplateError < StandardError
-      def initialize(msg = 'Invalid Character Type!', exception_type = 'custom')
-        @exception_type = exception_type
-        super(msg)
-      end
-    end
   end
 end

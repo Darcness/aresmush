@@ -38,6 +38,12 @@ module AresMUSH
         end
       end
 
+      def check_perms
+        return t('dispatcher.not_allowed') unless Chargen.can_approve?(enactor)
+
+        nil
+      end
+
       def required_args
         [target_name, stat_type, stat_name, main_value]
       end
